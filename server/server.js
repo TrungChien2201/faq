@@ -24,7 +24,7 @@ const fs = require("fs");
 const jwt = require("jsonwebtoken");
 
 mongoose
-  .connect("mongodb://127.0.0.1:27017/testimonial", {
+  .connect("mongodb://127.0.0.1:27017/faq-app", {
     useCreateIndex: true,
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -32,7 +32,7 @@ mongoose
   })
   .then(() => {
     if (process.env.NODE_ENV !== "test") {
-      console.log("Connected to %s", "mongodb://127.0.0.1:27017/testimonial");
+      console.log("Connected to %s", "mongodb://127.0.0.1:27017/faq-app");
     }
   });
 
@@ -165,6 +165,7 @@ app.prepare().then(async () => {
   };
 
   const verifyCookie = async (ctx, next) => {
+    return next();
     let shop = ctx.cookies.get("shop");
     let token = ctx.cookies.get("x-access-token");
 
@@ -189,15 +190,15 @@ app.prepare().then(async () => {
   };
 
   const verifyAPI = async (ctx, next) => {
-    let shop = ctx.cookies.get("shop");
-    let token = ctx.headers["x-access-token"] || ctx.headers["authorization"];
-    if (!verifyToken(token)) {
-      ctx.redirect(`/authorize?shop=${shop}`);
-      ctx.status = 401;
-      ctx.body = {
-        success: false,
-      };
-    }
+    // let shop = ctx.cookies.get("shop");
+    // let token = ctx.headers["x-access-token"] || ctx.headers["authorization"];
+    // if (!verifyToken(token)) {
+    //   ctx.redirect(`/authorize?shop=${shop}`);
+    //   ctx.status = 401;
+    //   ctx.body = {
+    //     success: false,
+    //   };
+    // }
 
     return next();
   };
@@ -658,8 +659,8 @@ app.prepare().then(async () => {
   });
 
   router.get("/", verifyCookie, async (ctx) => {
-    let shop = ctx.cookies.get("shop");
-
+    // let shop = ctx.cookies.get("shop");
+    let shop = "chienvu-store.myshopify.com";
     let shopData = await Shop.findOne({ shop });
 
     if (!shopData) {

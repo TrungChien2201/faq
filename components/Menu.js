@@ -26,9 +26,9 @@ export default function MenuHeader() {
             exactMatch: true,
           },
           {
-            url: "/testimonials",
-            label: "Testimonials",
-            icon: ChatMajor,
+            url: "/faqs",
+            label: "FAQs",
+            icon: QuestionMarkMajor,
             // exactMatch: true,
           },
           {
@@ -37,23 +37,9 @@ export default function MenuHeader() {
             icon: ThemesMajor,
             exactMatch: true,
           },
-          // {
-          //   url: "/forms",
-          //   label: "Forms",
-          //   icon: FormsMajor,
-          // },
         ]}
       />
-      <Navigation.Section
-        title="Settings"
-        items={[
-          {
-            url: "/theme-integrate",
-            label: "Theme Integrate",
-            icon: ThemeStoreMajor,
-          },
-        ]}
-      />
+      
       <Navigation.Section
         title="Support"
         items={[
