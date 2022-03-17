@@ -1,0 +1,759 @@
+    <div class="page-width">
+    {%assign column = config.number_of_columns%}
+    {% assign layout = 'masonry' %}
+    <div class="simesy-testimonial-pro-wrapper" id="sp-testimonial-pro-wrapper" data-view-id="61e827730cc3328fc7e2d3c4">
+    {%if config.section_title%}  
+    <h2 class="simesy-section-title">{{config.title}}</h2>
+    {%endif%}
+      <div id="{%if config.layout.first == 'slider'%}simesy-reviews-slider{%else%}simesy-reviews-grid{%endif%}" 
+          class="simesy-reviews-wrapper simesy-feed-wrap {%if config.theme_style == 'theme-one'%}simesy-reviews-template-grid1{%elsif config.theme_style == 'theme-two'%}simesy-reviews-template-grid2{%elsif config.theme_style == 'theme-three'%}simesy-reviews-template-grid3{%elsif config.theme_style == 'theme-four'%}simesy-reviews-template-grid4{%elsif config.theme_style == 'theme-five'%}simesy-reviews-template-grid5{%elsif config.theme_style == 'theme-six'%}simesy-reviews-template-grid6{%elsif config.theme_style == 'theme-seven'%}simesy-reviews-template-grid7{%elsif config.theme_style == 'theme-eight'%}simesy-reviews-template-grid8{%else%}simesy-reviews-template-grid9{%endif%} {%if config.layout.first == 'slider'%}simesy_content simesy-reviews-slider-wrapper simesy-reviews-layout-slider{%elsif config.layout.first == 'grid'%}simesy-reviews-layout-grid{%else%}simesy-reviews-layout-masonry{%endif%} " data-column="{{12 | divided_by: column}}"
+          {%if config.layout.first == 'slider'%}data-slider_settings={"autoplay":"{{config.slider_auto_play}}","autoplay_speed":"{{config.slider_auto_play_speed}}","slidesPerView":"{{config.number_of_columns}}","slidesPerGroup":"{{config.number_of_columns}}","spaceBetween":"20","navigation":"{{config.nagination_type}}"}{%endif%}>
+        <div class="simesy-container ">
+          {%if config.layout.first == 'slider'%}
+          <div class="simesy-reviews-slider-wrapper-inner">
+            <div class="simesy-reviews-slider swiper swiper-container">
+              <div class="swiper-wrapper">
+                {%elsif config.layout.first == 'grid'%}
+                <div class="simesy-all-reviews simesy_feeds simesy-row" data-column="{{12 | divided_by: column}}">
+                  {%else%}
+                  <div class="simesy-all-reviews simesy_feeds simesy-row simesy-active-masonry-layout" data-column="{{12 | divided_by: column}}">
+                    {%endif%}
+                    {% for testi in testimonials %}
+                    {% if config.theme_style == 'theme-one' %}
+                    <div class="{%if config.layout.first == 'slider'%}swiper-slide{%else%}simesy-col-{{12 | divided_by: column}}{%endif%}">
+                      <div class="simesy-review-template simesy-review-template-one simesy-review-template-amazon">
+                        {%if config.client_image%}
+                        <div class="simesy-reviewer-image">
+                          {% if config.image_sizes == 'custom' %}
+                          {% assign image_url = testi.config.image_url | split:'upload/'%}
+                          {% assign size = 'w_' | append:config.image_custom_size.width | append:',h_' | append:config.image_custom_size.height %}
+                          {% assign image_final = image_url[0] |append: 'upload/'| append:size | append:'/'| append:image_url[1]  %}
+                          <a href="javascript:void(0)">
+                            <img src="{{image_final}}"/>
+                          </a>
+                          {% else %}
+                          <a href="javascript:void(0)">
+                            <img src="{{testi.config.image_url}}"/>
+                          </a>
+                          {% endif %}
+                        </div>
+                        {%endif%}
+                        <div class="simesy-review-header">
+                          <div class="simesy-review-platform"><img src="{{testi.config.platform_logo}}"/></div>
+                          <div class="simesy-review-info">
+                            {%if config.testimonial_client_name%}
+                            <a href="javascript:void(0)"><h4>{{testi.config.name}}</h4></a>
+                            {%endif%}
+                            {%if config.testimonial_client_rating%}
+                            {% assign num_star = testi.config.rating %}
+                            <div class="simesy-rating-wrapper">
+                              {% for i in (1..num_star)%}
+                              <i class="{{config.tpro_star_icon}}" aria-hidden="true"></i>
+                              {% endfor %}
+                              {% if testi.config.rating < 5%}
+                              {% assign num_les = 5 | minus: num_start %}
+                              {% for i in (num_les..num_start)%}
+                              {% if config.tpro_star_icon contains 'smile' %}
+                              <i class="fa fa-frown-o" aria-hidden="true"></i>
+                              {% elsif config.tpro_star_icon contains 'thumbs' %}
+                              <i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
+                              {% else %}
+                              <i class="{{config.tpro_star_icon}}-o" aria-hidden="true"></i>
+                              {% endif %}
+
+                              {% endfor %}
+                              {% endif %}
+                            </div>
+                            {%endif%}
+        
+                            {%if config.testimonial_client_date%}
+                            
+                            <span class="simesy-review-date">{{testi.createdAt | date:'%B %d, %Y'}}</span>
+                            {%endif%}
+
+                          </div>
+                        </div>
+                        {%if config.testimonial_title%}
+                        <h3 class="simesy-review-title">{{testi.config.title}}</h3>
+                        {%endif%}
+                        <div class="simesy-review-content">
+                          {% if config.testimonial_text %}
+                          {% assign des = testi.config.content | strip_html %}
+                          {% if config.testimonial_content_type contains 'content_with_limit'%}
+                          
+                          <p class="simesy_add_read_more simesy_show_less_content simesy_more_added">
+                            <span class="simesy_content_ellipsis">{{testi.config.content | strip_html | truncatewords:config.testimonial_characters_limit}}</span>
+                            <span class="simesy_add_read_more_slice_content">{{testi.config.content | strip_html}}</span>
+                            {%if des.size > config.testimonial_characters_limit%}
+                            <span class="simesy_read_more">{{config.testimonial_read_more_text}}</span>
+                            <span class="simesy_read_less">{{config.testimonial_read_less_text}}'</span>
+                            {%endif%}
+
+                          </p>
+                          {% else %}
+                          <p>{{des}}</p>
+                          {% endif %}
+                          {% endif %}
+                        </div>
+                      </div>
+                    </div>
+
+                    {% elsif config.theme_style == 'theme-two' %}
+                    <div class="{%if config.layout.first == 'slider'%}swiper-slide{%else%}simesy-col-{{12 | divided_by: column}}{%endif%}">
+                      <div class="simesy-review-template simesy-review-template-two simesy-review-template-amazon">
+
+                        <div class="simesy-review-header">
+                          <div class="simesy-review-platform"><img src="{{testi.config.platform_logo}}"/></div>
+                          {%if config.client_image%}
+                          <div class="simesy-reviewer-image">
+                            {% if config.image_sizes == 'custom' %}
+                            {% assign image_url = testi.config.image_url | split:'upload/'%}
+                            {% assign size = 'w_' | append:config.image_custom_size.width | append:',h_' | append:config.image_custom_size.height %}
+                            {% assign image_final = image_url[0] |append: 'upload/'| append:size | append:'/'| append:image_url[1]  %}
+                            <a href="javascript:void(0)">
+                              <img src="{{image_final}}"/>
+                            </a>
+                            {% else %}
+                            <a href="javascript:void(0)">
+                              <img src="{{testi.config.image_url}}"/>
+                            </a>
+                            {% endif %}
+                          </div>
+                          {%endif%}
+                          <div class="simesy-review-info">
+                            {%if config.testimonial_client_name%}
+                            <a href="javascript:void(0)"><h4>{{testi.config.name}}</h4></a>
+                            {%endif%}
+                            {%if config.testimonial_client_rating%}
+                            {% assign num_star = testi.config.rating %}
+                            <div class="simesy-rating-wrapper">
+                              {% for i in (1..num_star)%}
+                              <i class="{{config.tpro_star_icon}}" aria-hidden="true"></i>
+                              {% endfor %}
+                              {% if testi.config.rating < 5%}
+                              {% assign num_les = 5 | minus: num_start %}
+                              {% for i in (num_les..num_start)%}
+                              {% if config.tpro_star_icon contains 'smile' %}
+                              <i class="fa fa-frown-o" aria-hidden="true"></i>
+                              {% elsif config.tpro_star_icon contains 'thumbs' %}
+                              <i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
+                              {% else %}
+                              <i class="{{config.tpro_star_icon}}-o" aria-hidden="true"></i>
+                              {% endif %}
+
+                              {% endfor %}
+                              {% endif %}
+                            </div>
+                            {%endif%}
+                            {%if config.testimonial_client_date%}
+                            <span class="simesy-review-date">{{testi.createdAt | date:'%B %d, %Y'}}</span>
+                            {%endif%}
+
+                          </div>
+                        </div>
+                        {%if config.testimonial_title%}
+                        <h3 class="simesy-review-title">{{testi.config.title}}</h3>
+                        {%endif%}
+                        <div class="simesy-review-content">
+                          {% if config.testimonial_text %}
+                          {% assign des = testi.config.content | strip_html %}
+                          {% if config.testimonial_content_type contains 'content_with_limit'%}
+                          <p class="simesy_add_read_more simesy_show_less_content simesy_more_added">
+                            <span class="simesy_content_ellipsis">{{testi.config.content | strip_html | truncatewords:config.testimonial_characters_limit}}</span>
+                            <span class="simesy_add_read_more_slice_content">{{testi.config.content | strip_html}}</span>
+                            {%if des.size > config.testimonial_characters_limit%}
+                            <span class="simesy_read_more">{{config.testimonial_read_more_text}}</span>
+                            <span class="simesy_read_less">{{config.testimonial_read_less_text}}'</span>
+                            {%endif%}
+
+                          </p>
+                          {% else %}
+                          <p>{{des}}</p>
+                          {% endif %}
+                          {% endif %}
+                        </div>
+                      </div>
+                    </div>
+
+                    {% elsif config.theme_style == 'theme-three' %}
+                    <div class="{%if config.layout.first == 'slider'%}swiper-slide{%else%}simesy-col-{{12 | divided_by: column}}{%endif%}">
+                      <div class="simesy-review-template simesy-review-template-three simesy-review-template-amazon">
+                        <div class="simesy-review-platform"><span>{{testi.config.platform_name}}</span></div>
+                        {%if config.testimonial_title%}
+                        <h3 class="simesy-review-title">{{testi.config.title}}</h3>
+                        {%endif%}
+                        {%if config.testimonial_client_rating%}
+                        {% assign num_star = testi.config.rating %}
+                        <div class="simesy-rating-wrapper">
+                          {% for i in (1..num_star)%}
+                          <i class="{{config.tpro_star_icon}}" aria-hidden="true"></i>
+                          {% endfor %}
+                          {% if testi.config.rating < 5%}
+                          {% assign num_les = 5 | minus: num_start %}
+                          {% for i in (num_les..num_start)%}
+                          {% if config.tpro_star_icon contains 'smile' %}
+                          <i class="fa fa-frown-o" aria-hidden="true"></i>
+                          {% elsif config.tpro_star_icon contains 'thumbs' %}
+                          <i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
+                          {% else %}
+                          <i class="{{config.tpro_star_icon}}-o" aria-hidden="true"></i>
+                          {% endif %}
+
+                          {% endfor %}
+                          {% endif %}
+                        </div>
+                        {%endif%}
+                        <div class="simesy-review-content">
+                          {% if config.testimonial_text %}
+                          {% assign des = testi.config.content | strip_html %}
+                          {% if config.testimonial_content_type contains 'content_with_limit'%}
+                          <p class="simesy_add_read_more simesy_show_less_content simesy_more_added">
+                            <span class="simesy_content_ellipsis">{{testi.config.content | strip_html | truncatewords:config.testimonial_characters_limit}}</span>
+                            <span class="simesy_add_read_more_slice_content">{{testi.config.content | strip_html}}</span>
+                            {%if des.size > config.testimonial_characters_limit%}
+                            <span class="simesy_read_more">{{config.testimonial_read_more_text}}</span>
+                            <span class="simesy_read_less">{{config.testimonial_read_less_text}}'</span>
+                            {%endif%}
+
+                          </p>
+                          {% else %}
+                          <p>{{des}}</p>
+                          {% endif %}
+                          {% endif %}
+                        </div>
+                        <div class="simesy-review-header">
+                          {%if config.client_image%}
+                          <div class="simesy-reviewer-image">
+                            {% if config.image_sizes == 'custom' %}
+                            {% assign image_url = testi.config.image_url | split:'upload/'%}
+                            {% assign size = 'w_' | append:config.image_custom_size.width | append:',h_' | append:config.image_custom_size.height %}
+                            {% assign image_final = image_url[0] |append: 'upload/'| append:size | append:'/'| append:image_url[1]  %}
+                            <a href="javascript:void(0)">
+                              <img src="{{image_final}}"/>
+                            </a>
+                            {% else %}
+                            <a href="javascript:void(0)">
+                              <img src="{{testi.config.image_url}}"/>
+                            </a>
+                            {% endif %}
+                          </div>
+                          {%endif%}
+                          <div class="simesy-review-info">
+                            {%if config.testimonial_client_name%}
+                            <a href="javascript:void(0)"><h4>{{testi.config.name}}</h4></a>
+                            {%endif%}
+
+                            {%if config.testimonial_client_date%}
+                            <span class="simesy-review-date">{{testi.createdAt | date:'%B %d, %Y'}}</span>
+                            {%endif%}
+
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+
+                    {% elsif config.theme_style == 'theme-four' %}
+                    <div class="{%if config.layout.first == 'slider'%}swiper-slide{%else%}simesy-col-{{12 | divided_by: column}}{%endif%}">
+                      <div class="simesy-review-template simesy-review-template-four simesy-review-template-amazon">
+                        <div class="simesy-review-header">
+                        <div class="simesy-review-platform"><img src="{{testi.config.platform_logo}}"/></div>
+    
+                  {%if config.testimonial_title%}
+                          <h3 class="simesy-review-title">{{testi.config.title}}</h3>
+                          {%endif%}
+                          {%if config.testimonial_client_rating%}
+                          {% assign num_star = testi.config.rating %}
+                          <div class="simesy-rating-wrapper">
+                            {% for i in (1..num_star)%}
+                            <i class="{{config.tpro_star_icon}}" aria-hidden="true"></i>
+                            {% endfor %}
+                            {% if testi.config.rating < 5%}
+                            {% assign num_les = 5 | minus: num_start %}
+                            {% for i in (num_les..num_start)%}
+                            {% if config.tpro_star_icon contains 'smile' %}
+                            <i class="fa fa-frown-o" aria-hidden="true"></i>
+                            {% elsif config.tpro_star_icon contains 'thumbs' %}
+                            <i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
+                            {% else %}
+                            <i class="{{config.tpro_star_icon}}-o" aria-hidden="true"></i>
+                            {% endif %}
+
+                            {% endfor %}
+                            {% endif %}
+                          </div>
+                          {%endif%}
+                          <div class="simesy-review-content">
+                          {% if config.testimonial_text %}
+                          {% assign des = testi.config.content | strip_html %}
+                          {% if config.testimonial_content_type contains 'content_with_limit'%}
+                          <p class="simesy_add_read_more simesy_show_less_content simesy_more_added">
+                            <span class="simesy_content_ellipsis">{{testi.config.content | strip_html | truncatewords:config.testimonial_characters_limit}}</span>
+                            <span class="simesy_add_read_more_slice_content">{{testi.config.content | strip_html}}</span>
+                            {%if des.size > config.testimonial_characters_limit%}
+                            <span class="simesy_read_more">{{config.testimonial_read_more_text}}</span>
+                            <span class="simesy_read_less">{{config.testimonial_read_less_text}}'</span>
+                            {%endif%}
+
+                          </p>
+                          {% else %}
+                          <p>{{des}}</p>
+                          {% endif %}
+                          {% endif %}
+                        </div>
+                        </div>
+                          <div class="simesy-review-info">
+                          {%if config.client_image%}
+                          <div class="simesy-reviewer-image">
+                            {% if config.image_sizes == 'custom' %}
+                            {% assign image_url = testi.config.image_url | split:'upload/'%}
+                            {% assign size = 'w_' | append:config.image_custom_size.width | append:',h_' | append:config.image_custom_size.height %}
+                            {% assign image_final = image_url[0] |append: 'upload/'| append:size | append:'/'| append:image_url[1]  %}
+                            <a href="javascript:void(0)">
+                              <img src="{{image_final}}"/>
+                            </a>
+                            {% else %}
+                            <a href="javascript:void(0)">
+                              <img src="{{testi.config.image_url}}"/>
+                            </a>
+                            {% endif %}
+                          </div>
+                          {%endif%}
+                          <div class="simesy-review-name-date">
+                            {%if config.testimonial_client_name%}
+                            <a href="javascript:void(0)"><h4>{{testi.config.name}}</h4></a>
+                            {%endif%}
+
+                            {%if config.testimonial_client_date%}
+                            <span class="simesy-review-date">{{testi.createdAt | date:'%B %d, %Y'}}</span>
+                            {%endif%}
+                          </div>
+           
+                        </div>
+                        
+                      </div>
+                    </div>
+
+                    {% elsif config.theme_style == 'theme-five' %}
+                    <div class="{%if config.layout.first == 'slider'%}swiper-slide{%else%}simesy-col-{{12 | divided_by: column}}{%endif%}">
+                      <div class="simesy-review-template simesy-review-template-five simesy-review-template-amazon">
+                        {%if config.client_image%}
+                        <div class="simesy-reviewer-image">
+                          {% if config.image_sizes == 'custom' %}
+                          {% assign image_url = testi.config.image_url | split:'upload/'%}
+                          {% assign size = 'w_' | append:config.image_custom_size.width | append:',h_' | append:config.image_custom_size.height %}
+                          {% assign image_final = image_url[0] |append: 'upload/'| append:size | append:'/'| append:image_url[1]  %}
+                          <a href="javascript:void(0)">
+                            <img src="{{image_final}}"/>
+                          </a>
+                          {% else %}
+                          <a href="javascript:void(0)">
+                            <img src="{{testi.config.image_url}}"/>
+                          </a>
+                          {% endif %}
+                        </div>
+                        {%endif%}
+                        <div class="simesy-review-header">
+                          <div class="simesy-review-platform"><img src="{{testi.config.platform_logo}}"/></div>
+                        </div>
+                        <div class="simesy-review-info">
+                          {%if config.testimonial_client_name%}
+                          <a href="javascript:void(0)"><h4>{{testi.config.name}}</h4></a>
+                          {%endif%}
+
+                        
+
+                        </div>
+                        {%if config.testimonial_title%}
+                        <h3 class="simesy-review-title">{{testi.config.title}}</h3>
+                        {%endif%}
+                        <div class="simesy-review-content">
+                          {% if config.testimonial_text %}
+                          {% assign des = testi.config.content | strip_html %}
+                          {% if config.testimonial_content_type contains 'content_with_limit'%}
+                          <p class="simesy_add_read_more simesy_show_less_content simesy_more_added">
+                            <span class="simesy_content_ellipsis">{{testi.config.content | strip_html | truncatewords:config.testimonial_characters_limit}}</span>
+                            <span class="simesy_add_read_more_slice_content">{{testi.config.content | strip_html}}</span>
+                            {%if des.size > config.testimonial_characters_limit%}
+                            <span class="simesy_read_more">{{config.testimonial_read_more_text}}</span>
+                            <span class="simesy_read_less">{{config.testimonial_read_less_text}}'</span>
+                            {%endif%}
+
+                          </p>
+                          {% else %}
+                          <p>{{des}}</p>
+                          {% endif %}
+                          {% endif %}
+                        </div>
+                        {%if config.testimonial_client_rating%}
+                        {% assign num_star = testi.config.rating %}
+                        <div class="simesy-rating-wrapper">
+                          {% for i in (1..num_star)%}
+                          <i class="{{config.tpro_star_icon}}" aria-hidden="true"></i>
+                          {% endfor %}
+                          {% if testi.config.rating < 5%}
+                          {% assign num_les = 5 | minus: num_start %}
+                          {% for i in (num_les..num_start)%}
+                          {% if config.tpro_star_icon contains 'smile' %}
+                          <i class="fa fa-frown-o" aria-hidden="true"></i>
+                          {% elsif config.tpro_star_icon contains 'thumbs' %}
+                          <i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
+                          {% else %}
+                          <i class="{{config.tpro_star_icon}}-o" aria-hidden="true"></i>
+                          {% endif %}
+
+                          {% endfor %}
+                          {% endif %}
+                        </div>
+                        {%endif%}
+                        {%if config.testimonial_client_date%}
+                        <span class="simesy-review-date">{{testi.createdAt | date:'%B %d, %Y'}}</span>
+                        {%endif%}
+                      </div>
+                    </div>
+
+                    {% elsif config.theme_style == 'theme-six' %}
+                    <div class="{%if config.layout.first == 'slider'%}swiper-slide{%else%}simesy-col-{{12 | divided_by: column}}{%endif%}">
+                      <div class="simesy-review-template simesy-review-template-six simesy-review-template-amazon">
+                        {%if config.client_image%}
+                        <div class="simesy-reviewer-image">
+                          {% if config.image_sizes == 'custom' %}
+                          {% assign image_url = testi.config.image_url | split:'upload/'%}
+                          {% assign size = 'w_' | append:config.image_custom_size.width | append:',h_' | append:config.image_custom_size.height %}
+                          {% assign image_final = image_url[0] |append: 'upload/'| append:size | append:'/'| append:image_url[1]  %}
+                          <a href="javascript:void(0)">
+                            <img src="{{image_final}}"/>
+                          </a>
+                          {% else %}
+                          <a href="javascript:void(0)">
+                            <img src="{{testi.config.image_url}}"/>
+                          </a>
+                          {% endif %}
+                        </div>
+                        {%endif%}
+                        {%if config.testimonial_title%}
+                        <h3 class="simesy-review-title">{{testi.config.title}}</h3>
+                        {%endif%}
+                        <div class="simesy-review-content">
+                          {% if config.testimonial_text %}
+                          {% assign des = testi.config.content | strip_html %}
+                          {% if config.testimonial_content_type contains 'content_with_limit'%}
+                          <p class="simesy_add_read_more simesy_show_less_content simesy_more_added">
+                            <span class="simesy_content_ellipsis">{{testi.config.content | strip_html | truncatewords:config.testimonial_characters_limit}}</span>
+                            <span class="simesy_add_read_more_slice_content">{{testi.config.content | strip_html}}</span>
+                            {%if des.size > config.testimonial_characters_limit%}
+                            <span class="simesy_read_more">{{config.testimonial_read_more_text}}</span>
+                            <span class="simesy_read_less">{{config.testimonial_read_less_text}}'</span>
+                            {%endif%}
+
+                          </p>
+                          {% else %}
+                          <p>{{des}}</p>
+                          {% endif %}
+                          {% endif %}
+                        </div>
+                        <div class="simesy-review-header">
+                          <div class="simesy-review-info">
+                           
+                            {%if config.testimonial_client_rating%}
+                            {% assign num_star = testi.config.rating %}
+                            <div class="simesy-rating-wrapper">
+                              {% for i in (1..num_star)%}
+                              <i class="{{config.tpro_star_icon}}" aria-hidden="true"></i>
+                              {% endfor %}
+                              {% if testi.config.rating < 5%}
+                              {% assign num_les = 5 | minus: num_start %}
+                              {% for i in (num_les..num_start)%}
+                              {% if config.tpro_star_icon contains 'smile' %}
+                              <i class="fa fa-frown-o" aria-hidden="true"></i>
+                              {% elsif config.tpro_star_icon contains 'thumbs' %}
+                              <i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
+                              {% else %}
+                              <i class="{{config.tpro_star_icon}}-o" aria-hidden="true"></i>
+                              {% endif %}
+
+                              {% endfor %}
+                              {% endif %}
+                            </div>
+                            {%endif%}
+                            {%if config.testimonial_client_name%}
+                            <a href="javascript:void(0)"><h4>{{testi.config.name}}</h4></a>
+                            {%endif%}
+                            {%if config.testimonial_client_date%}
+                            <span class="simesy-review-date">{{testi.createdAt | date:'%B %d, %Y'}}</span>
+                            {%endif%}
+
+                          </div>
+                          <div class="simesy-review-platform"><img src="{{testi.config.platform_logo}}"/></div>
+                        </div>
+
+
+
+                      </div>
+                    </div>
+
+                    {% elsif config.theme_style == 'theme-seven' %}
+                    <div class="{%if config.layout.first == 'slider'%}swiper-slide{%else%}simesy-col-{{12 | divided_by: column}}{%endif%}">
+                      <div class="simesy-review-template simesy-review-template-seven simesy-review-template-amazon">
+
+                      <div class="simesy-review-content">
+                      {% if config.testimonial_text %}
+                      {% assign des = testi.config.content | strip_html %}
+                      {% if config.testimonial_content_type contains 'content_with_limit'%}
+                      <p class="simesy_add_read_more simesy_show_less_content simesy_more_added">
+                        <span class="simesy_content_ellipsis">{{testi.config.content | strip_html | truncatewords:config.testimonial_characters_limit}}</span>
+                        <span class="simesy_add_read_more_slice_content">{{testi.config.content | strip_html}}</span>
+                        {%if des.size > config.testimonial_characters_limit%}
+                        <span class="simesy_read_more">{{config.testimonial_read_more_text}}</span>
+                        <span class="simesy_read_less">{{config.testimonial_read_less_text}}'</span>
+                        {%endif%}
+
+                      </p>
+                      {% else %}
+                      <p>{{des}}</p>
+                      {% endif %}
+                      {% endif %}
+                    </div>
+                        <div class="simesy-review-header">
+                          {%if config.client_image%}
+                          <div class="simesy-reviewer-image">
+                            {% if config.image_sizes == 'custom' %}
+                            {% assign image_url = testi.config.image_url | split:'upload/'%}
+                            {% assign size = 'w_' | append:config.image_custom_size.width | append:',h_' | append:config.image_custom_size.height %}
+                            {% assign image_final = image_url[0] |append: 'upload/'| append:size | append:'/'| append:image_url[1]  %}
+                            <a href="javascript:void(0)">
+                              <img src="{{image_final}}"/>
+                            </a>
+                            {% else %}
+                            <a href="javascript:void(0)">
+                              <img src="{{testi.config.image_url}}"/>
+                            </a>
+                            {% endif %}
+                          </div>
+                          {%endif%}
+                          <div class="simesy-review-info">
+                          {%if config.testimonial_title%}
+                          <h3 class="simesy-review-title">{{testi.config.title}}</h3>
+                          {%endif%}
+         
+                            {%if config.testimonial_client_rating%}
+                            {% assign num_star = testi.config.rating %}
+                            <div class="simesy-rating-wrapper">
+                              {% for i in (1..num_star)%}
+                              <i class="{{config.tpro_star_icon}}" aria-hidden="true"></i>
+                              {% endfor %}
+                              {% if testi.config.rating < 5%}
+                              {% assign num_les = 5 | minus: num_start %}
+                              {% for i in (num_les..num_start)%}
+                              {% if config.tpro_star_icon contains 'smile' %}
+                              <i class="fa fa-frown-o" aria-hidden="true"></i>
+                              {% elsif config.tpro_star_icon contains 'thumbs' %}
+                              <i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
+                              {% else %}
+                              <i class="{{config.tpro_star_icon}}-o" aria-hidden="true"></i>
+                              {% endif %}
+
+                              {% endfor %}
+                              {% endif %}
+                            </div>
+                            {%endif%}
+                            {%if config.testimonial_client_name%}
+                            <a href="javascript:void(0)"><h4>{{testi.config.name}}</h4></a>
+                            {%endif%}
+                            {%if config.testimonial_client_date%}
+                            <span class="simesy-review-date">{{testi.createdAt | date:'%B %d, %Y'}}</span>
+                            {%endif%}
+
+                          </div>
+                          <div class="simesy-review-platform"><img src="{{testi.config.platform_logo}}"/></div>
+                        </div>
+
+
+
+                      </div>
+                    </div>
+
+                    {% elsif config.theme_style == 'theme-eight' %}
+                    <div class="{%if config.layout.first == 'slider'%}swiper-slide{%else%}simesy-col-{{12 | divided_by: column}}{%endif%}">
+                      <div class="simesy-review-template simesy-review-template-eight simesy-review-template-amazon">
+                        <div class="simesy-reviews-on-hover">
+                        <div class="simesy-review-content">
+                        {% if config.testimonial_text %}
+                        {% assign des = testi.config.content | strip_html %}
+                        {% if config.testimonial_content_type contains 'content_with_limit'%}
+                        <p class="simesy_add_read_more simesy_show_less_content simesy_more_added">
+                          <span class="simesy_content_ellipsis">{{testi.config.content | strip_html | truncatewords:config.testimonial_characters_limit}}</span>
+                          <span class="simesy_add_read_more_slice_content">{{testi.config.content | strip_html}}</span>
+                          {%if des.size > config.testimonial_characters_limit%}
+                          <span class="simesy_read_more">{{config.testimonial_read_more_text}}</span>
+                          <span class="simesy_read_less">{{config.testimonial_read_less_text}}'</span>
+                          {%endif%}
+
+                        </p>
+                        {% else %}
+                        <p>{{des}}</p>
+                        {% endif %}
+                        {% endif %}
+                      </div>
+                          <div class="simesy-review-platform"><span>{{testi.config.platform_name}}</span></div>
+                        </div>
+                        <div class="simesy-review-header">
+                          <div class="simesy-review-info">
+                          {%if config.client_image%}
+                          <div class="simesy-reviewer-image">
+                            {% if config.image_sizes == 'custom' %}
+                            {% assign image_url = testi.config.image_url | split:'upload/'%}
+                            {% assign size = 'w_' | append:config.image_custom_size.width | append:',h_' | append:config.image_custom_size.height %}
+                            {% assign image_final = image_url[0] |append: 'upload/'| append:size | append:'/'| append:image_url[1]  %}
+                            <a href="javascript:void(0)">
+                              <img src="{{image_final}}"/>
+                            </a>
+                            {% else %}
+                            <a href="javascript:void(0)">
+                              <img src="{{testi.config.image_url}}"/>
+                            </a>
+                            {% endif %}
+                          </div>
+                          {%endif%}
+                          {%if config.testimonial_title%}
+                        <h3 class="simesy-review-title">{{testi.config.title}}</h3>
+                        {%endif%}
+                       
+                            {%if config.testimonial_client_rating%}
+                            {% assign num_star = testi.config.rating %}
+                            <div class="simesy-rating-wrapper">
+                              {% for i in (1..num_star)%}
+                              <i class="{{config.tpro_star_icon}}" aria-hidden="true"></i>
+                              {% endfor %}
+                              {% if testi.config.rating < 5%}
+                              {% assign num_les = 5 | minus: num_start %}
+                              {% for i in (num_les..num_start)%}
+                              {% if config.tpro_star_icon contains 'smile' %}
+                              <i class="fa fa-frown-o" aria-hidden="true"></i>
+                              {% elsif config.tpro_star_icon contains 'thumbs' %}
+                              <i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
+                              {% else %}
+                              <i class="{{config.tpro_star_icon}}-o" aria-hidden="true"></i>
+                              {% endif %}
+
+                              {% endfor %}
+                              {% endif %}
+                            </div>
+                            {%endif%}
+                            {%if config.testimonial_client_name%}
+                            <a href="javascript:void(0)"><h4>{{testi.config.name}}</h4></a>
+                            {%endif%}
+                            {%if config.testimonial_client_date%}
+                            <span class="simesy-review-date">{{testi.createdAt | date:'%B %d, %Y'}}</span>
+                            {%endif%}
+
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
+                    {% else %}
+                    <div class="{%if config.layout.first == 'slider'%}swiper-slide{%else%}simesy-col-{{12 | divided_by: column}}{%endif%}">
+                      <div class="simesy-review-template simesy-review-template-nine simesy-review-template-amazon">
+                        <div class="simesy-review-header">
+                          {%if config.client_image%}
+                          <div class="simesy-reviewer-image">
+                            {% if config.image_sizes == 'custom' %}
+                            {% assign image_url = testi.config.image_url | split:'upload/'%}
+                            {% assign size = 'w_' | append:config.image_custom_size.width | append:',h_' | append:config.image_custom_size.height %}
+                            {% assign image_final = image_url[0] |append: 'upload/'| append:size | append:'/'| append:image_url[1]  %}
+                            <a href="javascript:void(0)">
+                              <img src="{{image_final}}"/>
+                            </a>
+                            {% else %}
+                            <a href="javascript:void(0)">
+                              <img src="{{testi.config.image_url}}"/>
+                            </a>
+                            {% endif %}
+                          </div>
+                          {%endif%}
+                        
+                          <div class="simesy-review-info">
+                            {%if config.testimonial_client_name%}
+                            <a href="javascript:void(0)"><h4>{{testi.config.name}}</h4></a>
+                            {%endif%}
+                            <div class="simesy-rating-time">
+                            {%if config.testimonial_client_rating%}
+                            {% assign num_star = testi.config.rating %}
+                            <div class="simesy-rating-wrapper">
+                              {% for i in (1..num_star)%}
+                              <i class="{{config.tpro_star_icon}}" aria-hidden="true"></i>
+                              {% endfor %}
+                              {% if testi.config.rating < 5%}
+                              {% assign num_les = 5 | minus: num_start %}
+                              {% for i in (num_les..num_start)%}
+                              {% if config.tpro_star_icon contains 'smile' %}
+                              <i class="fa fa-frown-o" aria-hidden="true"></i>
+                              {% elsif config.tpro_star_icon contains 'thumbs' %}
+                              <i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
+                              {% else %}
+                              <i class="{{config.tpro_star_icon}}-o" aria-hidden="true"></i>
+                              {% endif %}
+
+                              {% endfor %}
+                              {% endif %}
+                            </div>
+                            {%endif%}
+                            {%if config.testimonial_client_date%}
+                            <span class="simesy-review-date">{{testi.createdAt | date:'%B %d, %Y'}}</span>
+                            {%endif%}
+                            </div>
+                            {%if config.testimonial_title%}
+                            <h3 class="simesy-review-title">{{testi.config.title}}</h3>
+                            {%endif%}
+                            <div class="simesy-review-content">
+                            {% if config.testimonial_text %}
+                            {% assign des = testi.config.content | strip_html %}
+                            {% if config.testimonial_content_type contains 'content_with_limit'%}
+                            <p class="simesy_add_read_more simesy_show_less_content simesy_more_added">
+                              <span class="simesy_content_ellipsis">{{testi.config.content | strip_html | truncatewords:config.testimonial_characters_limit}}</span>
+                              <span class="simesy_add_read_more_slice_content">{{testi.config.content | strip_html}}</span>
+                              {%if des.size > config.testimonial_characters_limit%}
+                              <span class="simesy_read_more">{{config.testimonial_read_more_text}}</span>
+                              <span class="simesy_read_less">{{config.testimonial_read_less_text}}'</span>
+                              {%endif%}
+  
+                            </p>
+                            {% else %}
+                            <p>{{des}}</p>
+                            {% endif %}
+                            {% endif %}
+                          </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {% endif %}
+                    {% endfor %}
+                    {% if config.layout.first == 'slider' %}
+                  </div>
+                </div>
+                {%if config.nagination_type != 'none'%}
+                <div class="simesy-swiper-carousel-wrapper">
+                  {%if config.nagination_type != 'arrows'%}
+                  <div class="simesy-swiper-pagination swiper-pagination simesy-swiper-pagination-0"></div>
+                  {%endif%}
+                  {%if config.nagination_type != 'dots'%}
+                  <div class="simesy-swiper-prev-next simesy-swiper-prev swiper-button-prev simesy-swiper-btn-prev-0"></div>
+                  <div class="simesy-swiper-prev-next simesy-swiper-next swiper-button-next simesy-swiper-btn-next-0"></div>
+                  {%endif%}
+                </div>
+                {%endif%}
+              </div>
+              {%elsif config.layout.first == 'grid' or config.layout.first == 'masonry'%}
+            </div>
+            {%endif%}
+          </div>
+
+        </div>
+        {%if config.layout.first != 'slider' and config.grid_pagination and totalTestimonialPages > 1%}
+        <div class="simesy-reviews-loadmore simesy_more" id="simesy-reviews-load-more" data-total="{{totalTestimonialPages}}" data-page="1" data-template_type="{{config.layout.first}}" data-layout-style="{{config.theme_style}}" data-shop="{{shop}}"><span>Load more</span></div>
+        {%endif%}
+      </div>
+    </div>
