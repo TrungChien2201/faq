@@ -4,21 +4,13 @@ import {
   Page,
   Layout,
   Card,
-  ResourceList,
-  ResourceItem,
-  TextStyle,
   Button,
   Frame,
-  TextContainer,
   ButtonGroup,
   IndexTable,
   useIndexResourceState,
-  Tag,
   Icon,
 } from "@shopify/polaris";
-import CopyToClipboard from "react-copy-to-clipboard";
-import { useAppBridge } from "@shopify/app-bridge-react";
-import { getSessionToken } from "@shopify/app-bridge-utils";
 import axios from "axios";
 import { DeleteMinor, EditMinor } from "@shopify/polaris-icons";
 
@@ -26,6 +18,7 @@ import ModalConfirmDelete from "./ModalConfirmDelete";
 import moment from "moment";
 import { AiOutlineCopy } from "react-icons/ai";
 import router from "next/router";
+import RequestCustom from "../constants/request";
 
 const heading = [
   { title: "Title" },
@@ -52,6 +45,7 @@ const SliderListing = (props) => {
   const [activeSuccess, setActiveSuccess] = useState(false);
   const [openDelete, SetOpenDelete] = useState(false);
   const [idSilerDelete, setIdSliderDelete] = useState("");
+  const [faqGroupList, setFaqGroupList] = useState([]);
 
   const openSliderEdit = () => {
     router.push("/widgets/new");
@@ -81,9 +75,9 @@ const SliderListing = (props) => {
       },
     };
     try {
-      axios.post(`/api/shortcodes`, data, config).then(({ data }) => {
+      axios.post(`/api/widget-faq`, data, config).then(({ data }) => {
         if (data?.success) {
-          setSlider(data?.data?.shortCodes);
+          setSlider(data?.data?.widget);
         }
       });
     } catch (error) {
@@ -116,7 +110,7 @@ const SliderListing = (props) => {
   }, []);
 
   const handleDeleteSlider = useCallback(
-    async (id) => {
+    async () => {
       // let sessionToken = "";
 
       // if (NODE_ENV === "production") {
@@ -130,10 +124,10 @@ const SliderListing = (props) => {
       };
       let data = { shop };
       try {
-        axios.delete(`/api/shortcodes/${id}`, data, config).then(({ data }) => {
+        axios.delete(`/api/widget-faq/${idSilerDelete}`, data, config).then(({ data }) => {
           if (data?.success) {
             setActiveSuccess(true);
-            const newSlider = slider.filter((item) => item._id !== id);
+            const newSlider = slider.filter((item) => item._id !== idSilerDelete);
             setSlider(newSlider);
           }
         });
@@ -141,8 +135,29 @@ const SliderListing = (props) => {
         toggleError();
       }
     },
-    [slider]
+    [slider, idSilerDelete]
   );
+
+  const getListFaqGroup = useCallback(async () => {
+    const datas = {
+      shop,
+    };
+    const respone = await RequestCustom.post("/api/faq", datas);
+    if (respone?.data?.data?.faq?.length > 0) {
+      const newFaqGroup = [
+        { label: "", value: "" },
+        ...respone?.data?.data?.faq?.map((item) => ({
+          label: item?.config?.name,
+          value: item?._id,
+        })),
+      ];
+      setFaqGroupList(newFaqGroup);
+    }
+  }, [shop]);
+
+  useEffect(() => {
+    getListFaqGroup();
+  }, []);
 
   const handleOpenEdit = (id) => {
     router.push(`/widgets/${id}`);
@@ -168,32 +183,15 @@ const SliderListing = (props) => {
 
   const rowMarkup =
     slider?.length > 0 &&
-    slider?.map(({ config: { title, shortCodes }, _id, createdAt }, index) => (
+    slider?.map(({ config: { faqGroup }, _id, createdAt }, index) => (
       <IndexTable.Row
         id={_id}
         key={_id}
         position={index}
         selected={selectedResources.includes(_id)}
       >
-        <IndexTable.Cell>{title}</IndexTable.Cell>
-        <IndexTable.Cell>
-          <CopyToClipboard text={renderShortCode(_id)} onCopy={handleCopy}>
-            <Tag>
-              <span style={{ width: "1.5rem", height: "1.5rem" }}>
-                <Icon source={AiOutlineCopy} />
-              </span>
-              <span
-                style={{
-                  maxWidth: "200px",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                }}
-              >
-                {renderShortCode(_id)}
-              </span>
-            </Tag>
-          </CopyToClipboard>
-        </IndexTable.Cell>
+        <IndexTable.Cell>{faqGroupList?.find(item => item?.value === faqGroup)?.label}</IndexTable.Cell>
+        
         <IndexTable.Cell>
           {moment(createdAt).format("DD/MM/YYYY")}
         </IndexTable.Cell>

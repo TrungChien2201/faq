@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const testimonialFormSchema = new mongoose.Schema(
+const faqSchema = mongoose.Schema(
   {
     shop: {
       type: "String",
@@ -14,4 +14,4 @@ const testimonialFormSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("TestimonialForm", testimonialFormSchema);
+module.exports = mongoose.model("faq", faqSchema);

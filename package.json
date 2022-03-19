@@ -71,6 +71,7 @@
     "react-rating-stars-component": "^2.2.0",
     "react-select": "^5.2.1",
     "react-sortable-hoc": "^2.0.0",
+    "react-switch": "^6.0.0",
     "redis": "^3.1.2",
     "sass": "^1.42.1",
     "swr": "^1.0.1",

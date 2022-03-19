@@ -22,6 +22,7 @@ const shopSchema = mongoose.Schema(
       default: false,
     },
     testimonial_order: [],
+    groupFaq: [],
   },
   { timestamps: true }
 );

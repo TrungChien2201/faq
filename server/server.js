@@ -7,7 +7,8 @@ import Koa from "koa";
 import next from "next";
 import Router from "koa-router";
 import Shop from "../models/shop.model";
-import Shortcode from "../models/shortcode.model";
+import Widget from "../models/widget.model"
+import Faq from "../models/faq.model";
 import TestimonialForm from "../models/testimonialform.model";
 import {
   storeCallback,
@@ -126,9 +127,9 @@ app.prepare().then(async () => {
 
   const uninstallApp = async (shop) => {
     await Shop.deleteOne({ shop });
-    await Shortcode.deleteMany({ shop });
+    // await Shortcode.deleteMany({ shop });
     await TestimonialForm.deleteMany({ shop });
-    await Testimonial.deleteMany({ shop });
+    // await Testimonial.deleteMany({ shop });
     delete ACTIVE_SHOPIFY_SHOPS[shop];
   };
 
@@ -442,211 +443,211 @@ app.prepare().then(async () => {
     }
   };
 
-  const filterTestimonial = async ({
-    ctx,
-    filterData,
-    orderBy,
-    orderType,
-    randomOrder,
-    testimonials,
-    shortCode,
-    testimonialArrayId,
-  }) => {
-    if (filterData === "latest") {
-      if (randomOrder) {
-        const newTestimonial = await Testimonial.find({
-          "config.status": "published",
-        });
-        testimonials = _.shuffle(newTestimonial);
-      } else {
-        switch (orderBy) {
-          case "ID":
-            testimonials = await Testimonial.find({
-              "config.status": "published",
-            }).sort({
-              _id: orderType === "DESC" ? -1 : 1,
-            });
-            break;
-          case "date":
-            testimonials = await Testimonial.find({
-              "config.status": "published",
-            }).sort({
-              createdAt: orderType === "DESC" ? -1 : 1,
-            });
-            break;
-          case "title":
-            testimonials = await Testimonial.find({
-              "config.status": "published",
-            }).sort({
-              "config.title": orderType === "DESC" ? -1 : 1,
-            });
-            break;
-          case "modified":
-            testimonials = await Testimonial.find({
-              "config.status": "published",
-            }).sort({
-              updatedAt: orderType === "DESC" ? -1 : 1,
-            });
-            break;
-          case "menu_order":
-            const results = await Testimonial.find({
-              "config.status": "published",
-            }).sort({
-              createdAt: -1,
-            });
+  // const filterTestimonial = async ({
+  //   ctx,
+  //   filterData,
+  //   orderBy,
+  //   orderType,
+  //   randomOrder,
+  //   testimonials,
+  //   shortCode,
+  //   testimonialArrayId,
+  // }) => {
+  //   if (filterData === "latest") {
+  //     if (randomOrder) {
+  //       const newTestimonial = await Testimonial.find({
+  //         "config.status": "published",
+  //       });
+  //       testimonials = _.shuffle(newTestimonial);
+  //     } else {
+  //       switch (orderBy) {
+  //         case "ID":
+  //           testimonials = await Testimonial.find({
+  //             "config.status": "published",
+  //           }).sort({
+  //             _id: orderType === "DESC" ? -1 : 1,
+  //           });
+  //           break;
+  //         case "date":
+  //           testimonials = await Testimonial.find({
+  //             "config.status": "published",
+  //           }).sort({
+  //             createdAt: orderType === "DESC" ? -1 : 1,
+  //           });
+  //           break;
+  //         case "title":
+  //           testimonials = await Testimonial.find({
+  //             "config.status": "published",
+  //           }).sort({
+  //             "config.title": orderType === "DESC" ? -1 : 1,
+  //           });
+  //           break;
+  //         case "modified":
+  //           testimonials = await Testimonial.find({
+  //             "config.status": "published",
+  //           }).sort({
+  //             updatedAt: orderType === "DESC" ? -1 : 1,
+  //           });
+  //           break;
+  //         case "menu_order":
+  //           const results = await Testimonial.find({
+  //             "config.status": "published",
+  //           }).sort({
+  //             createdAt: -1,
+  //           });
 
-            const indexObject = _.reduce(
-              results,
-              function (result, currentObject) {
-                result[currentObject._id] = currentObject;
-                return result;
-              },
-              {}
-            );
-            let resultFilter =
-              orderType === "DESC"
-                ? _.map(
-                    testimonialArrayId?.testimonial_order,
-                    function (currentGUID) {
-                      return indexObject[currentGUID];
-                    }
-                  ).reverse()
-                : _.map(
-                    testimonialArrayId?.testimonial_order,
-                    function (currentGUID) {
-                      return indexObject[currentGUID];
-                    }
-                  );
-            testimonials = resultFilter?.filter(
-              (item) => item !== null && item !== undefined && item
-            );
-            break;
-          default:
-            break;
-        }
-      }
-    } else if (filterData === "specific_testimonials") {
-      let specific = shortCode.specific_testimonial;
-      testimonials = await Testimonial.find({
-        _id: { $in: specific },
-        "config.status": "published",
-      }).sort({
-        createdAt: -1,
-      });
-    } else {
-      let exclude = shortCode.exclude_testimonial;
+  //           const indexObject = _.reduce(
+  //             results,
+  //             function (result, currentObject) {
+  //               result[currentObject._id] = currentObject;
+  //               return result;
+  //             },
+  //             {}
+  //           );
+  //           let resultFilter =
+  //             orderType === "DESC"
+  //               ? _.map(
+  //                   testimonialArrayId?.testimonial_order,
+  //                   function (currentGUID) {
+  //                     return indexObject[currentGUID];
+  //                   }
+  //                 ).reverse()
+  //               : _.map(
+  //                   testimonialArrayId?.testimonial_order,
+  //                   function (currentGUID) {
+  //                     return indexObject[currentGUID];
+  //                   }
+  //                 );
+  //           testimonials = resultFilter?.filter(
+  //             (item) => item !== null && item !== undefined && item
+  //           );
+  //           break;
+  //         default:
+  //           break;
+  //       }
+  //     }
+  //   } else if (filterData === "specific_testimonials") {
+  //     let specific = shortCode.specific_testimonial;
+  //     testimonials = await Testimonial.find({
+  //       _id: { $in: specific },
+  //       "config.status": "published",
+  //     }).sort({
+  //       createdAt: -1,
+  //     });
+  //   } else {
+  //     let exclude = shortCode.exclude_testimonial;
 
-      if (randomOrder) {
-        const newTestimonial = await Testimonial.find({
-          _id: { $nin: exclude },
-          "config.status": "published",
-        });
-        testimonials = _.shuffle(newTestimonial);
-      } else {
-        switch (orderBy) {
-          case "ID":
-            testimonials = await Testimonial.find({
-              _id: { $nin: exclude },
-              "config.status": "published",
-            }).sort({
-              _id: orderType === "DESC" ? -1 : 1,
-            });
+  //     if (randomOrder) {
+  //       const newTestimonial = await Testimonial.find({
+  //         _id: { $nin: exclude },
+  //         "config.status": "published",
+  //       });
+  //       testimonials = _.shuffle(newTestimonial);
+  //     } else {
+  //       switch (orderBy) {
+  //         case "ID":
+  //           testimonials = await Testimonial.find({
+  //             _id: { $nin: exclude },
+  //             "config.status": "published",
+  //           }).sort({
+  //             _id: orderType === "DESC" ? -1 : 1,
+  //           });
 
-            break;
-          case "date":
-            testimonials = await Testimonial.find({
-              _id: { $nin: exclude },
-              "config.status": "published",
-            }).sort({
-              "config.date": orderType === "DESC" ? -1 : 1,
-            });
+  //           break;
+  //         case "date":
+  //           testimonials = await Testimonial.find({
+  //             _id: { $nin: exclude },
+  //             "config.status": "published",
+  //           }).sort({
+  //             "config.date": orderType === "DESC" ? -1 : 1,
+  //           });
 
-            break;
-          case "title":
-            testimonials = await Testimonial.find({
-              _id: { $nin: exclude },
-              "config.status": "published",
-            }).sort({
-              "config.title": orderType === "DESC" ? -1 : 1,
-            });
-            break;
-          case "modified":
-            testimonials = await Testimonial.find({
-              _id: { $nin: exclude },
-              "config.status": "published",
-            }).sort({
-              updatedAt: orderType === "DESC" ? -1 : 1,
-            });
-            break;
-          case "menu_order":
-            const results = await Testimonial.find({
-              _id: { $nin: exclude },
-              "config.status": "published",
-            }).sort({
-              createdAt: -1,
-            });
+  //           break;
+  //         case "title":
+  //           testimonials = await Testimonial.find({
+  //             _id: { $nin: exclude },
+  //             "config.status": "published",
+  //           }).sort({
+  //             "config.title": orderType === "DESC" ? -1 : 1,
+  //           });
+  //           break;
+  //         case "modified":
+  //           testimonials = await Testimonial.find({
+  //             _id: { $nin: exclude },
+  //             "config.status": "published",
+  //           }).sort({
+  //             updatedAt: orderType === "DESC" ? -1 : 1,
+  //           });
+  //           break;
+  //         case "menu_order":
+  //           const results = await Testimonial.find({
+  //             _id: { $nin: exclude },
+  //             "config.status": "published",
+  //           }).sort({
+  //             createdAt: -1,
+  //           });
 
-            const indexObject = _.reduce(
-              results,
-              function (result, currentObject) {
-                result[currentObject._id] = currentObject;
-                return result;
-              },
-              {}
-            );
-            let result =
-              orderType === "DESC"
-                ? _.map(
-                    testimonialArrayId?.testimonial_order,
-                    function (currentGUID) {
-                      return indexObject[currentGUID];
-                    }
-                  ).reverse()
-                : _.map(
-                    testimonialArrayId?.testimonial_order,
-                    function (currentGUID) {
-                      return indexObject[currentGUID];
-                    }
-                  );
-            testimonials = result?.filter(
-              (item) => item !== null && item !== undefined && item
-            );
-            break;
-          default:
-            break;
-        }
-      }
-    }
+  //           const indexObject = _.reduce(
+  //             results,
+  //             function (result, currentObject) {
+  //               result[currentObject._id] = currentObject;
+  //               return result;
+  //             },
+  //             {}
+  //           );
+  //           let result =
+  //             orderType === "DESC"
+  //               ? _.map(
+  //                   testimonialArrayId?.testimonial_order,
+  //                   function (currentGUID) {
+  //                     return indexObject[currentGUID];
+  //                   }
+  //                 ).reverse()
+  //               : _.map(
+  //                   testimonialArrayId?.testimonial_order,
+  //                   function (currentGUID) {
+  //                     return indexObject[currentGUID];
+  //                   }
+  //                 );
+  //           testimonials = result?.filter(
+  //             (item) => item !== null && item !== undefined && item
+  //           );
+  //           break;
+  //         default:
+  //           break;
+  //       }
+  //     }
+  //   }
 
-    let shortCodeData = {};
+  //   let shortCodeData = {};
 
-    if (
-      shortCode?.layout[0] &&
-      ["grid", "masonry", "list"].includes(shortCode?.layout[0]) &&
-      shortCode.grid_pagination
-    ) {
-      let numberPerPage = Number(shortCode.tp_per_page);
-      let totalTestimonialPages = Math.ceil(
-        testimonials.length / numberPerPage
-      );
-      testimonials = _.take(testimonials, numberPerPage);
-      shortCodeData = {
-        testimonials: testimonials,
-        totalTestimonialPages,
-      };
-    } else {
-      shortCodeData = {
-        testimonials: testimonials,
-      };
-    }
-    ctx.status = 200;
-    ctx.body = {
-      success: true,
-      data: {
-        shortCode: shortCodeData,
-      },
-    };
-  };
+  //   if (
+  //     shortCode?.layout[0] &&
+  //     ["grid", "masonry", "list"].includes(shortCode?.layout[0]) &&
+  //     shortCode.grid_pagination
+  //   ) {
+  //     let numberPerPage = Number(shortCode.tp_per_page);
+  //     let totalTestimonialPages = Math.ceil(
+  //       testimonials.length / numberPerPage
+  //     );
+  //     testimonials = _.take(testimonials, numberPerPage);
+  //     shortCodeData = {
+  //       testimonials: testimonials,
+  //       totalTestimonialPages,
+  //     };
+  //   } else {
+  //     shortCodeData = {
+  //       testimonials: testimonials,
+  //     };
+  //   }
+  //   ctx.status = 200;
+  //   ctx.body = {
+  //     success: true,
+  //     data: {
+  //       shortCode: shortCodeData,
+  //     },
+  //   };
+  // };
 
   router.get("/authorize", async (ctx) => {
     let { shop } = ctx.query;
@@ -902,94 +903,57 @@ app.prepare().then(async () => {
     }
   );
 
-  router.post(
-    "/api/save_form_data",
-    bodyParser(),
-    verifyAPI,
-    cors(),
-    async (ctx) => {
-      let { shop, config } = ctx.request.body;
+  // router.post(
+  //   "/api/get_shortcode",
+  //   verifyAPI,
+  //   cors(),
+  //   bodyParser(),
+  //   async (ctx) => {
+  //     let { id, shop } = ctx.request.body;
 
-      try {
-        let testimonial = new Testimonial({ shop, config });
-        let shopData = await Shop.findOne({ shop });
-        const testimonial_order = JSON.stringify(shopData?.testimonial_order);
-        let newOrder;
-        await testimonial.save();
-        ctx.status = 200;
-        ctx.body = {
-          success: true,
-          data: {
-            testimonial,
-          },
-        };
+  //     try {
+  //       let shortCode = await Shortcode.findById(id);
+  //       await Shortcode.findByIdAndUpdate(
+  //         id,
+  //         { $set: { view: Number(shortCode?.view + 1) } },
+  //         { new: true }
+  //       );
+  //       let testimonialArrayId = await Shop.findOne({ shop });
+  //       let testimonialList = await Testimonial.find({
+  //         "config.status": "published",
+  //       });
+  //       let testimonials;
+  //       if (!shortCode || !testimonialList) {
+  //         ctx.status = 400;
+  //         ctx.body = {
+  //           success: false,
+  //         };
+  //         return;
+  //       }
+  //       let filterData = shortCode.config.display_testimonials_from;
+  //       let orderBy = shortCode.config.testimonial_order_by;
+  //       let orderType = shortCode.config.testimonial_order;
+  //       let randomOrder = shortCode.config.random_order;
 
-        if (Array.isArray(JSON.parse(testimonial_order))) {
-          newOrder = JSON.parse(testimonial_order);
-          newOrder?.unshift(testimonial?._id);
-        }
-        await Shop.updateOne({ shop: shop }, { testimonial_order: newOrder });
-      } catch (error) {
-        console.log(error);
-        ctx.status = 400;
-        ctx.body = {
-          success: false,
-        };
-      }
-    }
-  );
-
-  router.post(
-    "/api/get_shortcode",
-    verifyAPI,
-    cors(),
-    bodyParser(),
-    async (ctx) => {
-      let { id, shop } = ctx.request.body;
-
-      try {
-        let shortCode = await Shortcode.findById(id);
-        await Shortcode.findByIdAndUpdate(
-          id,
-          { $set: { view: Number(shortCode?.view + 1) } },
-          { new: true }
-        );
-        let testimonialArrayId = await Shop.findOne({ shop });
-        let testimonialList = await Testimonial.find({
-          "config.status": "published",
-        });
-        let testimonials;
-        if (!shortCode || !testimonialList) {
-          ctx.status = 400;
-          ctx.body = {
-            success: false,
-          };
-          return;
-        }
-        let filterData = shortCode.config.display_testimonials_from;
-        let orderBy = shortCode.config.testimonial_order_by;
-        let orderType = shortCode.config.testimonial_order;
-        let randomOrder = shortCode.config.random_order;
-
-        await filterTestimonial({
-          filterData,
-          orderBy,
-          orderType,
-          randomOrder,
-          testimonials,
-          shortCode: shortCode.config,
-          testimonialArrayId,
-          ctx,
-        });
-      } catch (error) {
-        console.log(error);
-        ctx.status = 400;
-        ctx.body = {
-          success: false,
-        };
-      }
-    }
-  );
+  //       await filterTestimonial({
+  //         filterData,
+  //         orderBy,
+  //         orderType,
+  //         randomOrder,
+  //         testimonials,
+  //         shortCode: shortCode.config,
+  //         testimonialArrayId,
+  //         ctx,
+  //       });
+  //     } catch (error) {
+  //       console.log(error);
+  //       ctx.status = 400;
+  //       ctx.body = {
+  //         success: false,
+  //       };
+  //     }
+  //   }
+  // );
 
   router.post(
     "/api/get_testimonial_widget",
@@ -1036,231 +1000,231 @@ app.prepare().then(async () => {
     }
   );
 
-  router.post(
-    "/api/get_more_testimonial",
-    cors(),
-    bodyParser(),
-    verifyAPI,
-    async (ctx) => {
-      let { id, shop, page } = ctx.request.body;
+  // router.post(
+  //   "/api/get_more_testimonial",
+  //   cors(),
+  //   bodyParser(),
+  //   verifyAPI,
+  //   async (ctx) => {
+  //     let { id, shop, page } = ctx.request.body;
 
-      try {
-        let shortCode = await Shortcode.findById(id);
-        let testimonialArrayId = await Shop.findOne({ shop });
-        let testimonialList = await Testimonial.find({
-          "config.status": "published",
-        });
-        let testimonials;
-        if (!shortCode || !testimonialList) {
-          ctx.status = 400;
-          ctx.body = {
-            success: false,
-          };
-          return;
-        }
-        let filterData = shortCode.config.display_testimonials_from;
-        let orderBy = shortCode.config.testimonial_order_by;
-        let orderType = shortCode.config.testimonial_order;
-        let randomOrder = shortCode.config.random_order;
-        let numberPerPage = shortCode.config.tp_per_page;
+  //     try {
+  //       let shortCode = await Shortcode.findById(id);
+  //       let testimonialArrayId = await Shop.findOne({ shop });
+  //       let testimonialList = await Testimonial.find({
+  //         "config.status": "published",
+  //       });
+  //       let testimonials;
+  //       if (!shortCode || !testimonialList) {
+  //         ctx.status = 400;
+  //         ctx.body = {
+  //           success: false,
+  //         };
+  //         return;
+  //       }
+  //       let filterData = shortCode.config.display_testimonials_from;
+  //       let orderBy = shortCode.config.testimonial_order_by;
+  //       let orderType = shortCode.config.testimonial_order;
+  //       let randomOrder = shortCode.config.random_order;
+  //       let numberPerPage = shortCode.config.tp_per_page;
 
-        if (filterData === "latest") {
-          if (randomOrder) {
-            const newTestimonial = await Testimonial.find({
-              "config.status": "published",
-            });
-            testimonials = _.shuffle(newTestimonial);
-          } else {
-            switch (orderBy) {
-              case "ID":
-                testimonials = await Testimonial.find({
-                  "config.status": "published",
-                }).sort({
-                  _id: orderType === "DESC" ? -1 : 1,
-                });
-                break;
-              case "date":
-                testimonials = await Testimonial.find({
-                  "config.status": "published",
-                }).sort({
-                  createdAt: orderType === "DESC" ? -1 : 1,
-                });
-                break;
-              case "title":
-                testimonials = await Testimonial.find({
-                  "config.status": "published",
-                }).sort({
-                  "config.title": orderType === "DESC" ? -1 : 1,
-                });
-                break;
-              case "modified":
-                testimonials = await Testimonial.find({
-                  "config.status": "published",
-                }).sort({
-                  updatedAt: orderType === "DESC" ? -1 : 1,
-                });
-                break;
-              case "menu_order":
-                const results = await Testimonial.find({
-                  "config.status": "published",
-                }).sort({
-                  createdAt: -1,
-                });
+  //       if (filterData === "latest") {
+  //         if (randomOrder) {
+  //           const newTestimonial = await Testimonial.find({
+  //             "config.status": "published",
+  //           });
+  //           testimonials = _.shuffle(newTestimonial);
+  //         } else {
+  //           switch (orderBy) {
+  //             case "ID":
+  //               testimonials = await Testimonial.find({
+  //                 "config.status": "published",
+  //               }).sort({
+  //                 _id: orderType === "DESC" ? -1 : 1,
+  //               });
+  //               break;
+  //             case "date":
+  //               testimonials = await Testimonial.find({
+  //                 "config.status": "published",
+  //               }).sort({
+  //                 createdAt: orderType === "DESC" ? -1 : 1,
+  //               });
+  //               break;
+  //             case "title":
+  //               testimonials = await Testimonial.find({
+  //                 "config.status": "published",
+  //               }).sort({
+  //                 "config.title": orderType === "DESC" ? -1 : 1,
+  //               });
+  //               break;
+  //             case "modified":
+  //               testimonials = await Testimonial.find({
+  //                 "config.status": "published",
+  //               }).sort({
+  //                 updatedAt: orderType === "DESC" ? -1 : 1,
+  //               });
+  //               break;
+  //             case "menu_order":
+  //               const results = await Testimonial.find({
+  //                 "config.status": "published",
+  //               }).sort({
+  //                 createdAt: -1,
+  //               });
 
-                const indexObject = _.reduce(
-                  results,
-                  function (result, currentObject) {
-                    result[currentObject._id] = currentObject;
-                    return result;
-                  },
-                  {}
-                );
-                let resultFilter =
-                  orderType === "DESC"
-                    ? _.map(
-                        testimonialArrayId?.testimonial_order,
-                        function (currentGUID) {
-                          return indexObject[currentGUID];
-                        }
-                      ).reverse()
-                    : _.map(
-                        testimonialArrayId?.testimonial_order,
-                        function (currentGUID) {
-                          return indexObject[currentGUID];
-                        }
-                      );
-                testimonials = resultFilter?.filter(
-                  (item) => item !== null && item !== undefined && item
-                );
-                break;
-              default:
-                break;
-            }
-          }
-        } else if (filterData === "specific_testimonials") {
-          let specific = shortCode.config.specific_testimonial;
-          testimonials = await Testimonial.find({
-            _id: { $in: specific },
-            "config.status": "published",
-          }).sort({
-            createdAt: -1,
-          });
-        } else {
-          let exclude = shortCode.config.exclude_testimonial;
+  //               const indexObject = _.reduce(
+  //                 results,
+  //                 function (result, currentObject) {
+  //                   result[currentObject._id] = currentObject;
+  //                   return result;
+  //                 },
+  //                 {}
+  //               );
+  //               let resultFilter =
+  //                 orderType === "DESC"
+  //                   ? _.map(
+  //                       testimonialArrayId?.testimonial_order,
+  //                       function (currentGUID) {
+  //                         return indexObject[currentGUID];
+  //                       }
+  //                     ).reverse()
+  //                   : _.map(
+  //                       testimonialArrayId?.testimonial_order,
+  //                       function (currentGUID) {
+  //                         return indexObject[currentGUID];
+  //                       }
+  //                     );
+  //               testimonials = resultFilter?.filter(
+  //                 (item) => item !== null && item !== undefined && item
+  //               );
+  //               break;
+  //             default:
+  //               break;
+  //           }
+  //         }
+  //       } else if (filterData === "specific_testimonials") {
+  //         let specific = shortCode.config.specific_testimonial;
+  //         testimonials = await Testimonial.find({
+  //           _id: { $in: specific },
+  //           "config.status": "published",
+  //         }).sort({
+  //           createdAt: -1,
+  //         });
+  //       } else {
+  //         let exclude = shortCode.config.exclude_testimonial;
 
-          if (randomOrder) {
-            const newTestimonial = await Testimonial.find({
-              _id: { $nin: exclude },
-              "config.status": "published",
-            });
-            testimonials = _.shuffle(newTestimonial);
-          } else {
-            switch (orderBy) {
-              case "ID":
-                testimonials = await Testimonial.find({
-                  _id: { $nin: exclude },
-                  "config.status": "published",
-                }).sort({
-                  _id: orderType === "DESC" ? -1 : 1,
-                });
+  //         if (randomOrder) {
+  //           const newTestimonial = await Testimonial.find({
+  //             _id: { $nin: exclude },
+  //             "config.status": "published",
+  //           });
+  //           testimonials = _.shuffle(newTestimonial);
+  //         } else {
+  //           switch (orderBy) {
+  //             case "ID":
+  //               testimonials = await Testimonial.find({
+  //                 _id: { $nin: exclude },
+  //                 "config.status": "published",
+  //               }).sort({
+  //                 _id: orderType === "DESC" ? -1 : 1,
+  //               });
 
-                break;
-              case "date":
-                testimonials = await Testimonial.find({
-                  _id: { $nin: exclude },
-                  "config.status": "published",
-                }).sort({
-                  createdAt: orderType === "DESC" ? -1 : 1,
-                });
+  //               break;
+  //             case "date":
+  //               testimonials = await Testimonial.find({
+  //                 _id: { $nin: exclude },
+  //                 "config.status": "published",
+  //               }).sort({
+  //                 createdAt: orderType === "DESC" ? -1 : 1,
+  //               });
 
-                break;
-              case "title":
-                testimonials = await Testimonial.find({
-                  _id: { $nin: exclude },
-                  "config.status": "published",
-                }).sort({
-                  "config.title": orderType === "DESC" ? -1 : 1,
-                });
-                break;
-              case "modified":
-                testimonials = await Testimonial.find({
-                  _id: { $nin: exclude },
-                  "config.status": "published",
-                }).sort({
-                  updatedAt: orderType === "DESC" ? -1 : 1,
-                });
-                break;
-              case "menu_order":
-                const results = await Testimonial.find({
-                  _id: { $nin: exclude },
-                  "config.status": "published",
-                }).sort({
-                  createdAt: -1,
-                });
+  //               break;
+  //             case "title":
+  //               testimonials = await Testimonial.find({
+  //                 _id: { $nin: exclude },
+  //                 "config.status": "published",
+  //               }).sort({
+  //                 "config.title": orderType === "DESC" ? -1 : 1,
+  //               });
+  //               break;
+  //             case "modified":
+  //               testimonials = await Testimonial.find({
+  //                 _id: { $nin: exclude },
+  //                 "config.status": "published",
+  //               }).sort({
+  //                 updatedAt: orderType === "DESC" ? -1 : 1,
+  //               });
+  //               break;
+  //             case "menu_order":
+  //               const results = await Testimonial.find({
+  //                 _id: { $nin: exclude },
+  //                 "config.status": "published",
+  //               }).sort({
+  //                 createdAt: -1,
+  //               });
 
-                const indexObject = _.reduce(
-                  results,
-                  function (result, currentObject) {
-                    result[currentObject._id] = currentObject;
-                    return result;
-                  },
-                  {}
-                );
-                let result =
-                  orderType === "DESC"
-                    ? _.map(
-                        testimonialArrayId?.testimonial_order,
-                        function (currentGUID) {
-                          return indexObject[currentGUID];
-                        }
-                      ).reverse()
-                    : _.map(
-                        testimonialArrayId?.testimonial_order,
-                        function (currentGUID) {
-                          return indexObject[currentGUID];
-                        }
-                      );
-                testimonials = result?.filter(
-                  (item) => item !== null && item !== undefined && item
-                );
-                break;
-              default:
-                break;
-            }
-          }
-        }
+  //               const indexObject = _.reduce(
+  //                 results,
+  //                 function (result, currentObject) {
+  //                   result[currentObject._id] = currentObject;
+  //                   return result;
+  //                 },
+  //                 {}
+  //               );
+  //               let result =
+  //                 orderType === "DESC"
+  //                   ? _.map(
+  //                       testimonialArrayId?.testimonial_order,
+  //                       function (currentGUID) {
+  //                         return indexObject[currentGUID];
+  //                       }
+  //                     ).reverse()
+  //                   : _.map(
+  //                       testimonialArrayId?.testimonial_order,
+  //                       function (currentGUID) {
+  //                         return indexObject[currentGUID];
+  //                       }
+  //                     );
+  //               testimonials = result?.filter(
+  //                 (item) => item !== null && item !== undefined && item
+  //               );
+  //               break;
+  //             default:
+  //               break;
+  //           }
+  //         }
+  //       }
 
-        let totalTestimonialPages = Math.ceil(
-          testimonials.length / numberPerPage
-        );
+  //       let totalTestimonialPages = Math.ceil(
+  //         testimonials.length / numberPerPage
+  //       );
 
-        testimonials = _.take(
-          _.drop(testimonials, (page - 1) * numberPerPage),
-          numberPerPage
-        );
+  //       testimonials = _.take(
+  //         _.drop(testimonials, (page - 1) * numberPerPage),
+  //         numberPerPage
+  //       );
 
-        let shortCodeData = {
-          config: shortCode.config,
-          shop: shortCode.shop,
-          testimonials: testimonials,
-          totalTestimonialPages,
-        };
-        ctx.status = 200;
-        ctx.body = {
-          success: true,
-          data: {
-            shortCode: shortCodeData,
-          },
-        };
-      } catch (error) {
-        console.log(error);
-        ctx.status = 400;
-        ctx.body = {
-          success: false,
-        };
-      }
-    }
-  );
+  //       let shortCodeData = {
+  //         config: shortCode.config,
+  //         shop: shortCode.shop,
+  //         testimonials: testimonials,
+  //         totalTestimonialPages,
+  //       };
+  //       ctx.status = 200;
+  //       ctx.body = {
+  //         success: true,
+  //         data: {
+  //           shortCode: shortCodeData,
+  //         },
+  //       };
+  //     } catch (error) {
+  //       console.log(error);
+  //       ctx.status = 400;
+  //       ctx.body = {
+  //         success: false,
+  //       };
+  //     }
+  //   }
+  // );
 
   router.post("/api/get_form", verifyAPI, cors(), bodyParser(), async (ctx) => {
     let { id, shop } = ctx.request.body;
@@ -1398,234 +1362,43 @@ app.prepare().then(async () => {
     }
   });
 
-  router.post("/api/testimonials", bodyParser(), verifyAPI, async (ctx) => {
+  /*widget-faq*/
+  router.post("/api/widget-faq", verifyAPI, bodyParser(), async (ctx) => {
     let { shop } = ctx.request.body;
 
     try {
-      let testimonials = await Testimonial.find({ shop }).sort({
-        createdAt: -1,
-      });
-      if (!testimonials) {
-        ctx.status = 400;
-        ctx.body = {
-          success: false,
-        };
-      }
-      const arrayIdSort = await Shop.findOne({ shop });
-
-      if (
-        arrayIdSort?.testimonial_order?.length > 0 &&
-        testimonials?.length > 0
-      ) {
-        const indexObject = _.reduce(
-          testimonials,
-          function (result, currentObject) {
-            result[currentObject._id] = currentObject;
-            return result;
-          },
-          {}
-        );
-        const sortedCollection = _.map(
-          arrayIdSort.testimonial_order,
-          function (currentGUID) {
-            return indexObject[currentGUID];
-          }
-        );
-        ctx.status = 200;
-        ctx.body = {
-          success: true,
-          data: {
-            testimonials: sortedCollection,
-          },
-        };
-      } else {
-        ctx.status = 200;
-        ctx.body = {
-          success: true,
-          data: {
-            testimonials,
-          },
-        };
-      }
+      let widget = await Widget.find({ shop }).sort({ createdAt: -1 });
+      ctx.status = 200;
+      ctx.body = {
+        success: true,
+        data: {
+          widget,
+        },
+      };
     } catch (error) {
       ctx.status = 400;
       ctx.body = {
         success: false,
-        error: error,
       };
     }
   });
 
-  router.post("/api/testimonials/new", verifyAPI, bodyParser(), async (ctx) => {
+  router.post("/api/widget-faq/new", verifyAPI, bodyParser(), async (ctx) => {
     let { shop, config } = ctx.request.body;
 
     try {
-      let testimonial = new Testimonial({ shop, config });
-      await testimonial.save();
-      ctx.status = 200;
-      ctx.body = {
-        success: true,
-        data: {
-          testimonial,
-        },
-      };
-    } catch (error) {
-      console.log(error);
-      ctx.status = 400;
-      ctx.body = {
-        success: false,
-      };
-    }
-  });
-
-  router.put("/api/sort-testimonials", verifyAPI, bodyParser(), async (ctx) => {
-    let { shop, config } = ctx.request.body;
-    try {
-      let shopData = await Shop.findOne({ shop });
-      await Shop.updateOne({ shop: shop }, { testimonial_order: config });
-      ctx.status = 200;
-      ctx.body = {
-        success: true,
-        data: config,
-      };
-    } catch (error) {
-      ctx.status = 400;
-      ctx.body = {
-        success: false,
-      };
-    }
-  });
-
-  router.post("/api/testimonials/:id", verifyAPI, bodyParser(), async (ctx) => {
-    let { shop } = ctx.request.body;
-    let { id } = ctx.params;
-
-    try {
-      let testimonial = await Testimonial.findById(id);
-      ctx.status = 200;
-      ctx.body = {
-        success: true,
-        data: {
-          testimonial,
-        },
-      };
-    } catch (error) {
-      console.log(error);
-      ctx.status = 400;
-      ctx.body = {
-        success: false,
-      };
-    }
-  });
-
-  router.put("/api/testimonials/:id", verifyAPI, bodyParser(), async (ctx) => {
-    let { shop, config } = ctx.request.body;
-    let { id } = ctx.params;
-
-    try {
-      let testimonial = await Testimonial.findByIdAndUpdate(
-        id,
-        { $set: { config: config } },
-        { new: true }
-      );
-      ctx.status = 200;
-      ctx.body = {
-        success: true,
-        data: {
-          testimonial,
-        },
-      };
-    } catch (error) {
-      console.log(error);
-      ctx.status = 400;
-      ctx.body = {
-        success: false,
-      };
-    }
-  });
-
-  router.delete(
-    "/api/testimonials/:id",
-    verifyAPI,
-    bodyParser(),
-    async (ctx) => {
-      let { shop } = ctx.request.body;
-      let { id } = ctx.params;
-
-      try {
-        await Testimonial.deleteOne({ _id: id });
-        ctx.status = 200;
-        ctx.body = {
-          success: true,
-        };
-      } catch (error) {
-        console.log(error);
-        ctx.status = 400;
-        ctx.body = {
-          success: false,
-        };
-      }
-    }
-  );
-
-  router.post("/api/shortcodes", verifyAPI, bodyParser(), async (ctx) => {
-    let { shop } = ctx.request.body;
-
-    try {
-      let shortCodes = await Shortcode.find({ shop }).sort({ createdAt: -1 });
-      ctx.status = 200;
-      ctx.body = {
-        success: true,
-        data: {
-          shortCodes,
-        },
-      };
-    } catch (error) {
-      ctx.status = 400;
-      ctx.body = {
-        success: false,
-      };
-    }
-  });
-
-  router.post("/api/shortcodes/view", verifyAPI, bodyParser(), async (ctx) => {
-    let { shop } = ctx.request.body;
-
-    try {
-      let totalWidget = await Shortcode.aggregate([
-        { $group: { _id: null, view: { $sum: "$view" } } },
-      ]);
-      ctx.status = 200;
-      ctx.body = {
-        success: true,
-        data: {
-          totalWidget,
-        },
-      };
-    } catch (error) {
-      ctx.status = 400;
-      ctx.body = {
-        success: false,
-      };
-    }
-  });
-
-  router.post("/api/shortcodes/new", verifyAPI, bodyParser(), async (ctx) => {
-    let { shop, config } = ctx.request.body;
-
-    try {
-      let shortCodes = new Shortcode({
+      let widget = new Widget({
         shop,
         config: {
           ...config,
         },
       });
-      await shortCodes.save();
+      await widget.save();
       ctx.status = 200;
       ctx.body = {
         success: true,
         data: {
-          shortCodes,
+          widget,
         },
       };
     } catch (error) {
@@ -1637,17 +1410,17 @@ app.prepare().then(async () => {
     }
   });
 
-  router.post("/api/shortcodes/:id", verifyAPI, bodyParser(), async (ctx) => {
+  router.post("/api/widget-faq/:id", verifyAPI, bodyParser(), async (ctx) => {
     let { shop } = ctx.request.body;
     let { id } = ctx.params;
 
     try {
-      let shortCodes = await Shortcode.findById(id);
+      let widget = await Widget.findById(id);
       ctx.status = 200;
       ctx.body = {
         success: true,
         data: {
-          shortCodes,
+          widget,
         },
       };
     } catch (error) {
@@ -1659,12 +1432,12 @@ app.prepare().then(async () => {
     }
   });
 
-  router.put("/api/shortcodes/:id", verifyAPI, bodyParser(), async (ctx) => {
+  router.put("/api/widget-faq/:id", verifyAPI, bodyParser(), async (ctx) => {
     let { shop, config } = ctx.request.body;
     let { id } = ctx.params;
 
     try {
-      let shortCodes = await Shortcode.findByIdAndUpdate(
+      let widget = await Widget.findByIdAndUpdate(
         id,
         { $set: { config: config } },
         { new: true }
@@ -1673,7 +1446,7 @@ app.prepare().then(async () => {
       ctx.body = {
         success: true,
         data: {
-          shortCodes,
+          widget,
         },
       };
     } catch (error) {
@@ -1685,12 +1458,12 @@ app.prepare().then(async () => {
     }
   });
 
-  router.delete("/api/shortcodes/:id", verifyAPI, bodyParser(), async (ctx) => {
+  router.delete("/api/widget-faq/:id", verifyAPI, bodyParser(), async (ctx) => {
     let { shop } = ctx.request.body;
     let { id } = ctx.params;
 
     try {
-      await Shortcode.deleteOne({ _id: id });
+      await Widget.deleteOne({ _id: id });
       ctx.status = 200;
       ctx.body = {
         success: true,
@@ -1704,20 +1477,18 @@ app.prepare().then(async () => {
     }
   });
 
-  // testimonial form
+  // faq
 
-  router.post("/api/testimonial-form", verifyAPI, bodyParser(), async (ctx) => {
+  router.post("/api/faq", verifyAPI, bodyParser(), async (ctx) => {
     let { shop } = ctx.request.body;
 
     try {
-      let testimonialForm = await TestimonialForm.find({ shop }).sort({
-        createdAt: -1,
-      });
+      let faq = await Faq.find({ shop }).sort({ createdAt: 1 });
       ctx.status = 200;
       ctx.body = {
         success: true,
         data: {
-          testimonialForm,
+          faq,
         },
       };
     } catch (error) {
@@ -1728,33 +1499,167 @@ app.prepare().then(async () => {
     }
   });
 
-  router.post(
-    "/api/testimonial-form/new",
-    verifyAPI,
-    bodyParser(),
-    async (ctx) => {
-      let { shop, config } = ctx.request.body;
-
-      try {
-        let testimonialForm = new TestimonialForm({ shop, config });
-        await testimonialForm.save();
-        ctx.status = 200;
-        ctx.body = {
-          success: true,
-          data: {
-            testimonialForm,
-          },
-        };
-      } catch (error) {
-        console.log(error);
-        ctx.status = 400;
-        ctx.body = {
-          success: false,
-        };
-      }
+  router.post("/api/faq-group/new", verifyAPI, bodyParser(), async (ctx) => {
+    let { shop, config } = ctx.request.body;
+    const shopData = await Shop.findOne({ shop });
+    let arrayGroup = [];
+    for (let i = 1; i <= 1000; i++) {
+      arrayGroup.push(i);
     }
-  );
+    const indexGroup = _.difference(arrayGroup, shopData.groupFaq);
+    try {
+      const newGroupFaqNumber = [...shopData.groupFaq, ...[indexGroup[0]]];
+      await Shop.updateOne({ shop }, { groupFaq: newGroupFaqNumber });
+      let faq = new Faq({
+        shop,
+        config: {
+          ...config,
+          name: `${config.name} ${indexGroup[0]}`,
+        },
+      });
+      await faq.save();
+      ctx.status = 200;
+      ctx.body = {
+        success: true,
+        data: {
+          faq,
+        },
+      };
+    } catch (error) {
+      console.log(error);
+      ctx.status = 400;
+      ctx.body = {
+        success: false,
+      };
+    }
+  });
 
+  router.put("/api/faq/new", verifyAPI, bodyParser(), async (ctx) => {
+    let { shop, config, id } = ctx.request.body;
+    try {
+      let faq = await Faq.findByIdAndUpdate(
+        id,
+        { $set: { config: config } },
+        { new: true }
+      );
+      ctx.status = 200;
+      ctx.body = {
+        success: true,
+        data: {
+          faq,
+        },
+      };
+    } catch (error) {
+      console.log(error);
+      ctx.status = 400;
+      ctx.body = {
+        success: false,
+      };
+    }
+  });
+
+  router.put("/api/faq-group/:id", verifyAPI, bodyParser(), async (ctx) => {
+    let { shop, config, nameOld } = ctx.request.body;
+    let { id } = ctx.params;
+    const shopData = await Shop.findOne({ shop });
+    let newGroup = shopData?.groupFaq;
+    try {
+      if (nameOld !== config.name && nameOld?.includes("New Group ")) {
+        const nameReplace = nameOld.replace("New Group ", "");
+        if (shopData?.groupFaq?.includes(Number(nameReplace))) {
+           newGroup = newGroup?.filter(
+            (item) => item !== Number(nameReplace)
+          );
+          await Shop.updateOne({ shop }, { groupFaq: newGroup });
+        }
+       else if (
+          !newGroup?.includes(Number(nameReplace)) &&
+          Number(nameReplace) > 0
+        ) {
+          const newGroupFaqNumber = [
+            ...shopData.groupFaq,
+            ...[Number(nameReplace)],
+          ];
+          await Shop.updateOne({ shop }, { groupFaq: newGroupFaqNumber });
+        }
+      }
+
+      if (config?.name.includes("New Group ")) {
+        const nameReplace = config?.name.replace("New Group ", "");
+        if (
+          !newGroup?.includes(Number(nameReplace)) &&
+          Number(nameReplace) > 0
+        ) {
+          const newGroupFaqNumber = [
+            ...newGroup,
+            ...[Number(nameReplace)],
+          ];
+          await Shop.updateOne({ shop }, { groupFaq: newGroupFaqNumber });
+        }
+      }
+      let faq = await Faq.findByIdAndUpdate(
+        id,
+        { $set: { config: config } },
+        { new: true }
+      );
+      ctx.status = 200;
+      ctx.body = {
+        success: true,
+        data: {
+          faq,
+        },
+      };
+    } catch (error) {
+      console.log(error);
+      ctx.status = 400;
+      ctx.body = {
+        success: false,
+      };
+    }
+  });
+
+  router.delete("/api/faq-group/:id", verifyAPI, bodyParser(), async (ctx) => {
+    let { id } = ctx.params;
+    const faqGroup = await Faq.findOne({ _id: id });
+    const shopData = await Shop.findOne({ shop: faqGroup?.shop });
+    const name = faqGroup?.config?.name;
+    try {
+      if (name.includes("New Group ")) {
+        const nameReplace = name.replace("New Group ", "");
+        if (!shopData?.groupFaq?.includes(Number(nameReplace))) {
+          const newGroupFaqNumber = [
+            ...shopData.groupFaq,
+            ...[Number(nameReplace)],
+          ];
+          await Shop.updateOne(
+            { shop: faqGroup?.shop },
+            { groupFaq: newGroupFaqNumber }
+          );
+        } else {
+          await Shop.updateOne(
+            { shop: faqGroup?.shop },
+            {
+              groupFaq: shopData?.groupFaq?.filter(
+                (item) => item !== Number(nameReplace)
+              ),
+            }
+          );
+        }
+      }
+      await Faq.deleteOne({ _id: id });
+      ctx.status = 200;
+      ctx.body = {
+        success: true,
+      };
+    } catch (error) {
+      console.log(error);
+      ctx.status = 400;
+      ctx.body = {
+        success: false,
+      };
+    }
+  });
+  /*end faq*/
   router.post("/api/install_code", verifyAPI, bodyParser(), async (ctx) => {
     let { shop, themeId } = ctx.request.body;
 
@@ -1790,500 +1695,6 @@ app.prepare().then(async () => {
       };
     }
   });
-
-  router.post(
-    "/api/testimonial-form/:id",
-    verifyAPI,
-    bodyParser(),
-    async (ctx) => {
-      let { shop } = ctx.request.body;
-      let { id } = ctx.params;
-
-      try {
-        let testimonialForm = await TestimonialForm.findById(id);
-        ctx.status = 200;
-        ctx.body = {
-          success: true,
-          data: {
-            testimonialForm,
-          },
-        };
-      } catch (error) {
-        ctx.status = 400;
-        ctx.body = {
-          success: false,
-        };
-      }
-    }
-  );
-
-  router.put(
-    "/api/testimonial-form/:id",
-    verifyAPI,
-    bodyParser(),
-    async (ctx) => {
-      let { config } = ctx.request.body;
-      let { id } = ctx.params;
-
-      try {
-        let testimonialForm = await TestimonialForm.findByIdAndUpdate(
-          id,
-          { $set: { config: config } },
-          { new: true }
-        );
-        ctx.status = 200;
-        ctx.body = {
-          success: true,
-          data: {
-            testimonialForm,
-          },
-        };
-      } catch (error) {
-        console.log(error);
-        ctx.status = 400;
-        ctx.body = {
-          success: false,
-        };
-      }
-    }
-  );
-
-  router.delete(
-    "/api/testimonial-form/:id",
-    verifyAPI,
-    bodyParser(),
-    async (ctx) => {
-      let { id } = ctx.params;
-
-      try {
-        await TestimonialForm.deleteOne({ _id: id });
-        ctx.status = 200;
-        ctx.body = {
-          success: true,
-        };
-      } catch (error) {
-        console.log(error);
-        ctx.status = 400;
-        ctx.body = {
-          success: false,
-        };
-      }
-    }
-  );
-  // } else {
-  // router.post("/api/get_shop_plan", bodyParser(), async (ctx) => {
-  //   let { shop } = ctx.request.body;
-
-  //   try {
-  //     let shopData = await Shop.findOne({ shop });
-  //     ctx.status = 200;
-  //     ctx.body = {
-  //       success: true,
-  //       data: {
-  //         shop: {
-  //           url: shopData.shop,
-  //           plan: shopData.plan, // FREE | PREMIUM,
-  //         },
-  //       },
-  //     };
-  //   } catch (error) {
-  //     ctx.status = 400;
-  //     ctx.body = {
-  //       success: false,
-  //     };
-  //   }
-  // });
-
-  // router.post("/api/testimonials", bodyParser(), async (ctx) => {
-  //   let { shop } = ctx.request.body;
-
-  //   try {
-  //     let testimonials = await Testimonial.find({ shop }).sort({
-  //       createdAt: -1,
-  //     });
-  //     if (!testimonials) {
-  //       ctx.status = 400;
-  //       ctx.body = {
-  //         success: false,
-  //       };
-  //     }
-  //     const arrayIdSort = await Shop.findOne({ shop });
-
-  //     if (
-  //       arrayIdSort?.testimonial_order?.length > 0 &&
-  //       testimonials?.length > 0
-  //     ) {
-  //       const indexObject = _.reduce(
-  //         testimonials,
-  //         function (result, currentObject) {
-  //           result[currentObject._id] = currentObject;
-  //           return result;
-  //         },
-  //         {}
-  //       );
-  //       const sortedCollection = _.map(
-  //         arrayIdSort.testimonial_order,
-  //         function (currentGUID) {
-  //           return indexObject[currentGUID];
-  //         }
-  //       );
-  //       ctx.status = 200;
-  //       ctx.body = {
-  //         success: true,
-  //         data: {
-  //           testimonials: sortedCollection,
-  //         },
-  //       };
-  //     } else {
-  //       ctx.status = 200;
-  //       ctx.body = {
-  //         success: true,
-  //         data: {
-  //           testimonials,
-  //         },
-  //       };
-  //     }
-  //   } catch (error) {
-  //     ctx.status = 400;
-  //     ctx.body = {
-  //       success: false,
-  //       error: error,
-  //     };
-  //   }
-  // });
-
-  // router.post("/api/testimonials/new", bodyParser(), async (ctx) => {
-  //   let { shop, config } = ctx.request.body;
-
-  //   try {
-  //     let testimonial = new Testimonial({ shop, config });
-  //     await testimonial.save();
-  //     ctx.status = 200;
-  //     ctx.body = {
-  //       success: true,
-  //       data: {
-  //         testimonial,
-  //       },
-  //     };
-  //   } catch (error) {
-  //     console.log(error);
-  //     ctx.status = 400;
-  //     ctx.body = {
-  //       success: false,
-  //     };
-  //   }
-  // });
-
-  // router.put("/api/sort-testimonials", bodyParser(), async (ctx) => {
-  //   let { shop, config } = ctx.request.body;
-  //   try {
-  //     let shopData = await Shop.findOne({ shop });
-  //     await Shop.updateOne({ shop: shop }, { testimonial_order: config });
-  //     ctx.status = 200;
-  //     ctx.body = {
-  //       success: true,
-  //       data: config,
-  //     };
-  //   } catch (error) {
-  //     ctx.status = 400;
-  //     ctx.body = {
-  //       success: false,
-  //     };
-  //   }
-  // });
-
-  // router.post("/api/testimonials/:id", bodyParser(), async (ctx) => {
-  //   let { shop } = ctx.request.body;
-  //   let { id } = ctx.params;
-
-  //   try {
-  //     let testimonial = await Testimonial.findById(id);
-  //     ctx.status = 200;
-  //     ctx.body = {
-  //       success: true,
-  //       data: {
-  //         testimonial,
-  //       },
-  //     };
-  //   } catch (error) {
-  //     console.log(error);
-  //     ctx.status = 400;
-  //     ctx.body = {
-  //       success: false,
-  //     };
-  //   }
-  // });
-
-  // router.put("/api/testimonials/:id", bodyParser(), async (ctx) => {
-  //   let { shop, config } = ctx.request.body;
-  //   let { id } = ctx.params;
-
-  //   try {
-  //     let testimonial = await Testimonial.findByIdAndUpdate(
-  //       id,
-  //       { $set: { config: config } },
-  //       { new: true }
-  //     );
-  //     ctx.status = 200;
-  //     ctx.body = {
-  //       success: true,
-  //       data: {
-  //         testimonial,
-  //       },
-  //     };
-  //   } catch (error) {
-  //     console.log(error);
-  //     ctx.status = 400;
-  //     ctx.body = {
-  //       success: false,
-  //     };
-  //   }
-  // });
-
-  // router.delete("/api/testimonials/:id", bodyParser(), async (ctx) => {
-  //   let { shop } = ctx.request.body;
-  //   let { id } = ctx.params;
-
-  //   try {
-  //     await Testimonial.deleteOne({ _id: id });
-  //     ctx.status = 200;
-  //     ctx.body = {
-  //       success: true,
-  //     };
-  //   } catch (error) {
-  //     console.log(error);
-  //     ctx.status = 400;
-  //     ctx.body = {
-  //       success: false,
-  //     };
-  //   }
-  // });
-
-  // router.post("/api/shortcodes", bodyParser(), async (ctx) => {
-  //   let { shop } = ctx.request.body;
-
-  //   try {
-  //     let shortCodes = await Shortcode.find({ shop }).sort({ createdAt: -1 });
-  //     ctx.status = 200;
-  //     ctx.body = {
-  //       success: true,
-  //       data: {
-  //         shortCodes,
-  //       },
-  //     };
-  //   } catch (error) {
-  //     ctx.status = 400;
-  //     ctx.body = {
-  //       success: false,
-  //     };
-  //   }
-  // });
-
-  // router.post("/api/shortcodes/new", bodyParser(), async (ctx) => {
-  //   let { shop, config } = ctx.request.body;
-
-  //   try {
-  //     let shortCodes = new Shortcode({
-  //       shop,
-  //       config: {
-  //         ...config
-  //       },
-  //     });
-  //     await shortCodes.save();
-  //     ctx.status = 200;
-  //     ctx.body = {
-  //       success: true,
-  //       data: {
-  //         shortCodes,
-  //       },
-  //     };
-  //   } catch (error) {
-  //     console.log(error);
-  //     ctx.status = 400;
-  //     ctx.body = {
-  //       success: false,
-  //     };
-  //   }
-  // });
-
-  // router.post("/api/shortcodes/:id", bodyParser(), async (ctx) => {
-  //   let { shop } = ctx.request.body;
-  //   let { id } = ctx.params;
-
-  //   try {
-  //     let shortCodes = await Shortcode.findById(id);
-  //     ctx.status = 200;
-  //     ctx.body = {
-  //       success: true,
-  //       data: {
-  //         shortCodes,
-  //       },
-  //     };
-  //   } catch (error) {
-  //     console.log(error);
-  //     ctx.status = 400;
-  //     ctx.body = {
-  //       success: false,
-  //     };
-  //   }
-  // });
-
-  // router.put("/api/shortcodes/:id", bodyParser(), async (ctx) => {
-  //   let { shop, config } = ctx.request.body;
-  //   let { id } = ctx.params;
-
-  //   try {
-  //     let shortCodes = await Shortcode.findByIdAndUpdate(
-  //       id,
-  //       { $set: { config: config } },
-  //       { new: true }
-  //     );
-  //     ctx.status = 200;
-  //     ctx.body = {
-  //       success: true,
-  //       data: {
-  //         shortCodes,
-  //       },
-  //     };
-  //   } catch (error) {
-  //     console.log(error);
-  //     ctx.status = 400;
-  //     ctx.body = {
-  //       success: false,
-  //     };
-  //   }
-  // });
-
-  // router.delete("/api/shortcodes/:id", bodyParser(), async (ctx) => {
-  //   let { shop } = ctx.request.body;
-  //   let { id } = ctx.params;
-
-  //   try {
-  //     await Shortcode.deleteOne({ _id: id });
-  //     ctx.status = 200;
-  //     ctx.body = {
-  //       success: true,
-  //     };
-  //   } catch (error) {
-  //     console.log(error);
-  //     ctx.status = 400;
-  //     ctx.body = {
-  //       success: false,
-  //     };
-  //   }
-  // });
-
-  // // testimonial form
-
-  // router.post("/api/testimonial-form", bodyParser(), async (ctx) => {
-  //   let { shop } = ctx.request.body;
-
-  //   try {
-  //     let testimonialForm = await TestimonialForm.find({ shop }).sort({
-  //       createdAt: -1,
-  //     });
-  //     ctx.status = 200;
-  //     ctx.body = {
-  //       success: true,
-  //       data: {
-  //         testimonialForm,
-  //       },
-  //     };
-  //   } catch (error) {
-  //     ctx.status = 400;
-  //     ctx.body = {
-  //       success: false,
-  //     };
-  //   }
-  // });
-
-  // router.post("/api/testimonial-form/new", bodyParser(), async (ctx) => {
-  //   let { shop, config } = ctx.request.body;
-
-  //   try {
-  //     let testimonialForm = new TestimonialForm({ shop, config });
-  //     await testimonialForm.save();
-  //     ctx.status = 200;
-  //     ctx.body = {
-  //       success: true,
-  //       data: {
-  //         testimonialForm,
-  //       },
-  //     };
-  //   } catch (error) {
-  //     console.log(error);
-  //     ctx.status = 400;
-  //     ctx.body = {
-  //       success: false,
-  //     };
-  //   }
-  // });
-
-  // router.post("/api/testimonial-form/:id", bodyParser(), async (ctx) => {
-  //   let { shop } = ctx.request.body;
-  //   let { id } = ctx.params;
-
-  //   try {
-  //     let testimonialForm = await TestimonialForm.findById(id);
-  //     ctx.status = 200;
-  //     ctx.body = {
-  //       success: true,
-  //       data: {
-  //         testimonialForm,
-  //       },
-  //     };
-  //   } catch (error) {
-  //     ctx.status = 400;
-  //     ctx.body = {
-  //       success: false,
-  //     };
-  //   }
-  // });
-
-  // router.put("/api/testimonial-form/:id", bodyParser(), async (ctx) => {
-  //   let { config } = ctx.request.body;
-  //   let { id } = ctx.params;
-
-  //   try {
-  //     let testimonialForm = await TestimonialForm.findByIdAndUpdate(
-  //       id,
-  //       { $set: { config: config } },
-  //       { new: true }
-  //     );
-  //     ctx.status = 200;
-  //     ctx.body = {
-  //       success: true,
-  //       data: {
-  //         testimonialForm,
-  //       },
-  //     };
-  //   } catch (error) {
-  //     console.log(error);
-  //     ctx.status = 400;
-  //     ctx.body = {
-  //       success: false,
-  //     };
-  //   }
-  // });
-
-  // router.delete("/api/testimonial-form/:id", bodyParser(), async (ctx) => {
-  //   let { id } = ctx.params;
-
-  //   try {
-  //     await TestimonialForm.deleteOne({ _id: id });
-  //     ctx.status = 200;
-  //     ctx.body = {
-  //       success: true,
-  //     };
-  //   } catch (error) {
-  //     console.log(error);
-  //     ctx.status = 400;
-  //     ctx.body = {
-  //       success: false,
-  //     };
-  //   }
-  // });
-  // }
 
   router.post(
     "/api/check_theme",

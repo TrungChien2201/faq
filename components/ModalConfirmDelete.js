@@ -1,20 +1,20 @@
 import { Modal, TextContainer } from "@shopify/polaris";
-import React from "react";
+import React, { useCallback } from "react";
 
 export default function ModalConfirmDelete(props) {
-  const { setOpen, id, handleDelete, title } = props;
+  const { setOpen, id, handleDelete, title, groupName } = props;
 
   const handleClose = () => {
     setOpen(false);
   };
 
-  const confirmDelete = () => {
-    handleDelete(id);
+  const confirmDelete = useCallback(() => {
+    handleDelete();
     setOpen(false);
-  };
+  },[]);
 
   return (
-    <div style={{ height: "500px" }} className="modal-confirm-delete">
+    <div style={{ height: "300px" }} className="modal-confirm-delete">
       <Modal
         open={true}
         onClose={handleClose}
@@ -32,7 +32,7 @@ export default function ModalConfirmDelete(props) {
       >
         <Modal.Section>
           <TextContainer>
-            <p>This can’t be undone</p>
+            <p>{groupName ? `Delete group ${groupName} and all group data?`:'Delete this FAQ?'}</p>
           </TextContainer>
         </Modal.Section>
       </Modal>

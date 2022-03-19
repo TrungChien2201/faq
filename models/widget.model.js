@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const shortCodeSchema = mongoose.Schema(
+const widgetSchema = mongoose.Schema(
   {
     shop: {
       type: "String",
@@ -10,13 +10,8 @@ const shortCodeSchema = mongoose.Schema(
       type: "Object",
       required: true,
     },
-    view: {
-      type: "Number",
-      default: 0,
-      required: true,
-    },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Shortcode", shortCodeSchema);
+module.exports = mongoose.model("Widget", widgetSchema);

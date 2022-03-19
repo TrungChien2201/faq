@@ -25,7 +25,7 @@ export default function DashboardGettingStartedTab(
 
   const tabOption = [
     { label: "Connect Store", key: 1, verify: true },
-    { label: "Add testimonials", key: 2, verify: !!totalTestimonial > 0 },
+    { label: "Add faqs", key: 2, verify: !!totalTestimonial > 0 },
     { label: "Add widget", key: 3, verify: !!totalWidget > 0 },
   ];
 
@@ -71,12 +71,12 @@ export default function DashboardGettingStartedTab(
         {selected === 2 && (
           <div>
             <FormLayout>
-              <TextStyle variation="strong">Add testimonials</TextStyle>
+              <TextStyle variation="strong">Add faqs</TextStyle>
               <div>
-                Add unlimited testimonials to showcase it on your online store
+                Add unlimited faqs to showcase it on your online store
               </div>
               <Button primary onClick={handleRedirectTestimonials}>
-                Add testimonials
+                Add faqs
               </Button>
             </FormLayout>
           </div>
@@ -85,7 +85,7 @@ export default function DashboardGettingStartedTab(
           <div>
             <FormLayout>
               <TextStyle variation="strong">Add widget</TextStyle>
-              <div>Showcase the best testimonials in the best way</div>
+              <div>Showcase the best faqs in the best way</div>
               <Button onClick={handleRedirectWidgets} primary>
                 Add widget
               </Button>

@@ -40,9 +40,9 @@ export default function Dashboard() {
       shop: shop,
     };
     try {
-      const { data } = await axios.post(`/api/testimonials`, datas, config);
+      const { data } = await axios.post(`/api/faq`, datas, config);
       if (data?.success) {
-        setTotalTestimonial(data?.data?.testimonials?.length);
+        setTotalTestimonial(data?.data?.faq?.length);
       }
     } catch (error) {}
   }, [accessToken]);
@@ -57,9 +57,9 @@ export default function Dashboard() {
       shop: shop,
     };
     try {
-      const { data } = await axios.post(`/api/shortcodes`, datas, config);
+      const { data } = await axios.post(`/api/widget-faq`, datas, config);
       if (data?.success) {
-        setTotalWidget(data?.data?.shortCodes?.length);
+        setTotalWidget(data?.data?.widget?.length);
       }
     } catch (error) {}
   }, [accessToken]);
@@ -78,7 +78,7 @@ export default function Dashboard() {
   }, [totalTestimonial, totalWidget]);
 
   const handleRedirectTestimonials = useCallback(() => {
-    router.push("/testimonials/new");
+    router.push("/faqs");
   }, [router]);
 
   const handleRedirectWidgets = useCallback(() => {
@@ -95,7 +95,7 @@ export default function Dashboard() {
                 actions={[
                   { content: "Add", onAction: handleRedirectTestimonials },
                 ]}
-                title="Total Testimonials"
+                title="Total FAQs"
               >
                 <DisplayText size="medium">
                   <TextStyle variation="strong">{totalTestimonial}</TextStyle>
