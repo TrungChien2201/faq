@@ -9,13 +9,11 @@ import Router from "koa-router";
 import Shop from "../models/shop.model";
 import Widget from "../models/widget.model"
 import Faq from "../models/faq.model";
-import TestimonialForm from "../models/testimonialform.model";
 import {
   storeCallback,
   loadCallback,
   deleteCallback,
 } from "../utilities/redis-store";
-import Testimonial from "../models/testimonial.model";
 
 const _ = require("lodash");
 const mongoose = require("mongoose");
@@ -128,7 +126,7 @@ app.prepare().then(async () => {
   const uninstallApp = async (shop) => {
     await Shop.deleteOne({ shop });
     // await Shortcode.deleteMany({ shop });
-    await TestimonialForm.deleteMany({ shop });
+    // await TestimonialForm.deleteMany({ shop });
     // await Testimonial.deleteMany({ shop });
     delete ACTIVE_SHOPIFY_SHOPS[shop];
   };
@@ -955,50 +953,50 @@ app.prepare().then(async () => {
   //   }
   // );
 
-  router.post(
-    "/api/get_testimonial_widget",
-    verifyAPI,
-    cors(),
-    bodyParser(),
-    async (ctx) => {
-      let { shortCode, shop } = ctx.request.body;
+  // router.post(
+  //   "/api/get_testimonial_widget",
+  //   verifyAPI,
+  //   cors(),
+  //   bodyParser(),
+  //   async (ctx) => {
+  //     let { shortCode, shop } = ctx.request.body;
 
-      try {
-        let testimonialArrayId = await Shop.findOne({ shop });
-        let testimonialList = await Testimonial.find({
-          "config.status": "published",
-        });
-        let testimonials;
-        if (!shortCode || !testimonialList) {
-          ctx.status = 400;
-          ctx.body = {
-            success: false,
-          };
-          return;
-        }
-        let filterData = shortCode.display_testimonials_from;
-        let orderBy = shortCode.testimonial_order_by;
-        let orderType = shortCode.testimonial_order;
-        let randomOrder = shortCode.random_order;
-        await filterTestimonial({
-          filterData,
-          orderBy,
-          orderType,
-          randomOrder,
-          testimonials,
-          shortCode,
-          testimonialArrayId,
-          ctx,
-        });
-      } catch (error) {
-        console.log(error);
-        ctx.status = 400;
-        ctx.body = {
-          success: false,
-        };
-      }
-    }
-  );
+  //     try {
+  //       let testimonialArrayId = await Shop.findOne({ shop });
+  //       let testimonialList = await Testimonial.find({
+  //         "config.status": "published",
+  //       });
+  //       let testimonials;
+  //       if (!shortCode || !testimonialList) {
+  //         ctx.status = 400;
+  //         ctx.body = {
+  //           success: false,
+  //         };
+  //         return;
+  //       }
+  //       let filterData = shortCode.display_testimonials_from;
+  //       let orderBy = shortCode.testimonial_order_by;
+  //       let orderType = shortCode.testimonial_order;
+  //       let randomOrder = shortCode.random_order;
+  //       await filterTestimonial({
+  //         filterData,
+  //         orderBy,
+  //         orderType,
+  //         randomOrder,
+  //         testimonials,
+  //         shortCode,
+  //         testimonialArrayId,
+  //         ctx,
+  //       });
+  //     } catch (error) {
+  //       console.log(error);
+  //       ctx.status = 400;
+  //       ctx.body = {
+  //         success: false,
+  //       };
+  //     }
+  //   }
+  // );
 
   // router.post(
   //   "/api/get_more_testimonial",
@@ -1226,35 +1224,35 @@ app.prepare().then(async () => {
   //   }
   // );
 
-  router.post("/api/get_form", verifyAPI, cors(), bodyParser(), async (ctx) => {
-    let { id, shop } = ctx.request.body;
+  // router.post("/api/get_form", verifyAPI, cors(), bodyParser(), async (ctx) => {
+  //   let { id, shop } = ctx.request.body;
 
-    try {
-      let testimonialForm = await TestimonialForm.findById(id);
+  //   try {
+  //     let testimonialForm = await TestimonialForm.findById(id);
 
-      if (!testimonialForm) {
-        ctx.status = 400;
-        ctx.body = {
-          success: false,
-        };
-        return;
-      }
+  //     if (!testimonialForm) {
+  //       ctx.status = 400;
+  //       ctx.body = {
+  //         success: false,
+  //       };
+  //       return;
+  //     }
 
-      ctx.status = 200;
-      ctx.body = {
-        success: true,
-        data: {
-          testimonialForm,
-        },
-      };
-    } catch (error) {
-      console.log(error);
-      ctx.status = 400;
-      ctx.body = {
-        success: false,
-      };
-    }
-  });
+  //     ctx.status = 200;
+  //     ctx.body = {
+  //       success: true,
+  //       data: {
+  //         testimonialForm,
+  //       },
+  //     };
+  //   } catch (error) {
+  //     console.log(error);
+  //     ctx.status = 400;
+  //     ctx.body = {
+  //       success: false,
+  //     };
+  //   }
+  // });
 
   router.post(
     "/api/get_pages",

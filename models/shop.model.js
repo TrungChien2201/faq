@@ -21,7 +21,6 @@ const shopSchema = mongoose.Schema(
       type: "Boolean",
       default: false,
     },
-    testimonial_order: [],
     groupFaq: [],
   },
   { timestamps: true }
