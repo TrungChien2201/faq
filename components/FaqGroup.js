@@ -62,8 +62,8 @@ function FaqGroup({
     if (group.name) {
       setGroupName(group?.name);
     }
-    if (group.faq) {
-      setFaq(group?.faq);
+    if (group.faqs) {
+      setFaq(group?.faqs);
     }
   }, [group?.name, group?.faq]);
 
@@ -168,7 +168,7 @@ function FaqGroup({
       {!isEdit && (
         <div className="group-content">
           <div className="group-list-faq">
-            {group?.faq?.map((item, index) => (
+            {group?.faqs?.map((item, index) => (
               <React.Fragment key={item?.id}>{renderFaq(item)}</React.Fragment>
             ))}
           </div>

@@ -23,7 +23,7 @@ function Faqs() {
       config: {
         name: "New Group",
         checked: false,
-        faq: [],
+        faqs: [],
       },
     };
     const { data } = await RequestCustom.post("/api/faq-group/new", datas);
@@ -45,7 +45,7 @@ function Faqs() {
         config: {
           name,
           checked: checked !== undefined ? checked : group?.checked,
-          faq: faq,
+          faqs: faq,
         },
         nameOld: group?.name,
       };
@@ -93,8 +93,8 @@ function Faqs() {
         if (item?.id === id) {
           return {
             ...item,
-            faq: [
-              ...item.faq,
+            faqs: [
+              ...item.faqs,
               ...[
                 {
                   id: idRandom,
@@ -112,8 +112,8 @@ function Faqs() {
         id,
         config: {
           ...newGroup,
-          faq: [
-            ...newGroup.faq,
+          faqs: [
+            ...newGroup.faqs,
             ...[
               {
                 id: idRandom,
@@ -140,7 +140,7 @@ function Faqs() {
       const newGroup = formik?.values?.groups?.find(
         (item) => item?.id === groupId
       );
-      const newFaq = newGroup?.faq?.map((item) => {
+      const newFaq = newGroup?.faqs?.map((item) => {
         if (item?.id === faqId) {
           return {
             ...item,
@@ -153,13 +153,13 @@ function Faqs() {
       });
       const newValue = formik?.values?.groups?.map((item) => {
         if (item?.id === groupId) {
-          return { ...item, faq: newFaq };
+          return { ...item, faqs: newFaq };
         }
         return { ...item };
       });
       const datas = {
         id: groupId,
-        config: { ...newGroup, faq: newFaq },
+        config: { ...newGroup, faqs: newFaq },
       };
       const { data } = await RequestCustom.put(`/api/faq/new`, datas);
       if (data) {
@@ -178,16 +178,16 @@ function Faqs() {
       const newGroup = formik?.values?.groups?.find(
         (item) => item?.id === groupId
       );
-      const newFaq = newGroup?.faq?.filter((item) => item?.id !== faqId);
+      const newFaq = newGroup?.faqs?.filter((item) => item?.id !== faqId);
       const newValue = formik?.values?.groups?.map((item) => {
         if (item?.id === groupId) {
-          return { ...item, faq: newFaq };
+          return { ...item, faqs: newFaq };
         }
         return { ...item };
       });
       const datas = {
         id: groupId,
-        config: { ...newGroup, faq: newFaq },
+        config: { ...newGroup, faqs: newFaq },
       };
       const { data } = await RequestCustom.put(`/api/faq/new`, datas);
       if (data) {
@@ -201,19 +201,19 @@ function Faqs() {
 
   const handleUpRow = async({ groupId, faqId }) => {
     const newGroup = _.find(formik.values.groups, { id: groupId });
-    const {faq} = newGroup;
-    const indexItem = _.findIndex(faq, { id: faqId });
-    if (faq[indexItem - 1] && faq[indexItem]) {
-      let newFaq = arrayMove(faq, indexItem, indexItem - 1);
-      const newValue = formik?.values?.group?.map((item) => {
+    const {faqs} = newGroup;
+    const indexItem = _.findIndex(faqs, { id: faqId });
+    if (faqs[indexItem - 1] && faqs[indexItem]) {
+      let newFaq = arrayMove(faqs, indexItem, indexItem - 1);
+      const newValue = formik?.values?.groups?.map((item) => {
         if (item?.id === groupId) {
-          return { ...item, faq: newFaq };
+          return { ...item, faqs: newFaq };
         }
         return { ...item };
       });
       const datas = {
         id: groupId,
-        config: { ...newGroup, faq: newFaq },
+        config: { ...newGroup, faqs: newFaq },
       };
       const { data } = await RequestCustom.put(`/api/faq/new`, datas);
       if (data) {
@@ -225,19 +225,19 @@ function Faqs() {
 
   const handleDownRow = async({ groupId, faqId }) => {
     const newGroup = _.find(formik.values.groups, { id: groupId });
-    const {faq} = newGroup;
-    const indexItem = _.findIndex(faq, { id: faqId });
-    if (faq[indexItem + 1] && faq[indexItem]) {
-      let newFaq = arrayMove(faq, indexItem, indexItem + 1);
+    const {faqs} = newGroup;
+    const indexItem = _.findIndex(faqs, { id: faqId });
+    if (faqs[indexItem + 1] && faqs[indexItem]) {
+      let newFaq = arrayMove(faqs, indexItem, indexItem + 1);
       const newValue = formik?.values?.groups?.map((item) => {
         if (item?.id === groupId) {
-          return { ...item, faq: newFaq };
+          return { ...item, faqs: newFaq };
         }
         return { ...item };
       });
       const datas = {
         id: groupId,
-        config: { ...newGroup, faq: newFaq },
+        config: { ...newGroup, faqs: newFaq },
       };
       const { data } = await RequestCustom.put(`/api/faq/new`, datas);
       if (data) {
