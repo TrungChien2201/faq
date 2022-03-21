@@ -37,7 +37,7 @@ function FaqItem({
   formik,
   deleteFaq,
   handleUpRow,
-  handleDownRow
+  handleDownRow,
 }) {
   const [open, setOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
@@ -54,6 +54,9 @@ function FaqItem({
     if (isGroupSelected && faqItem === item?.id) {
       setIsEdit(true);
     }
+    return () => {
+      setIsEdit(false);
+    };
   }, [isGroupSelected, faqItem, item?.id]);
 
   useEffect(() => {
@@ -103,12 +106,19 @@ function FaqItem({
       question,
       faqId: item?.id,
       groupId,
-      group: formik?.values?.group,
+      group: formik?.values?.groups,
     });
     if (data) {
       setIsEdit(false);
     }
-  }, [contentAnswer, question, item?.id, groupId, formik.values.group]);
+  }, [
+    setIsEdit,
+    contentAnswer,
+    question,
+    item?.id,
+    groupId,
+    formik.values.groups,
+  ]);
 
   useEffect(() => {
     if (item?.answer) {
@@ -141,7 +151,7 @@ function FaqItem({
       faqId: item?.id,
       groupId,
       checked: !item?.checked,
-      group: formik?.values?.group,
+      group: formik?.values?.groups,
     });
     if (data) {
       setIsEdit(false);
@@ -153,87 +163,104 @@ function FaqItem({
   }, [item, groupId]);
 
   const handleConfirmDelete = useCallback(() => {
-    setIsConfirmDelete(!isConfirmDelete)
-  },[isConfirmDelete])
+    setIsConfirmDelete(!isConfirmDelete);
+  }, [isConfirmDelete]);
 
   return (
     <>
-    <Card>
-      <Card.Section>
-        {isEdit ? (
-          <FormLayout>
-            <TextField
-              value={question}
-              onChange={handleChangeQuestion}
-              // name="name"
-              // id="name"
-              // error={isShowError ? formik.errors.name : ""}
-            />
-            <Editor
-              placeholder="Enter Content"
-              editorState={editorState}
-              onChange={handleChangeContent}
-              toolbarClassName="toolbarClassName"
-              wrapperClassName="wrapperClassName"
-              editorClassName="editor-faq"
-              onEditorStateChange={onEditorStateChange}
-            />
-            <ButtonGroup>
-              <Button onClick={handleSaveFaq} primary>
-                Save
-              </Button>
-              <Button onClick={handleCancleEditFaq}>Cancle</Button>
-            </ButtonGroup>
-          </FormLayout>
-        ) : (
-          <div className="faq-item">
-            <div className="item-header">
-              <div
-                ariaExpanded={open}
-                aria-controls="basic-collapsible"
-                onClick={handleToggle}
-                className="item-name"
-              >
-                {item?.question}
+      <Card>
+        <Card.Section>
+          {isEdit ? (
+            <FormLayout>
+              <TextField
+                value={question}
+                onChange={handleChangeQuestion}
+                // name="name"
+                // id="name"
+                // error={isShowError ? formik.errors.name : ""}
+              />
+              <Editor
+                placeholder="Enter Content"
+                editorState={editorState}
+                onChange={handleChangeContent}
+                toolbarClassName="toolbarClassName"
+                wrapperClassName="wrapperClassName"
+                editorClassName="editor-faq"
+                onEditorStateChange={onEditorStateChange}
+              />
+              <ButtonGroup>
+                <Button onClick={handleSaveFaq} primary>
+                  Save
+                </Button>
+                <Button onClick={handleCancleEditFaq}>Cancle</Button>
+              </ButtonGroup>
+            </FormLayout>
+          ) : (
+            <div className="faq-item">
+              <div className="item-header">
+                <div
+                  ariaExpanded={open}
+                  aria-controls="basic-collapsible"
+                  onClick={handleToggle}
+                  className="item-name"
+                >
+                  {item?.question}
+                </div>
+                <div className="group-header-action">
+                  <Switch
+                    uncheckedIcon={false}
+                    onColor="#008060"
+                    checkedIcon={false}
+                    checked={item?.checked}
+                    onChange={handleChangeSwitch}
+                    height={20}
+                    width={40}
+                  />
+                  <div
+                    className="cursor-pointer icon-down"
+                    onClick={() => handleUpRow({ groupId, faqId: item?.id })}
+                  >
+                    <Icon source={ChevronUpMinor} />
+                  </div>
+                  <div
+                    className="cursor-pointer icon-down"
+                    onClick={() => handleDownRow({ groupId, faqId: item?.id })}
+                  >
+                    <Icon source={ChevronDownMinor} />
+                  </div>
+                  <div
+                    className="cursor-pointer"
+                    onClick={() => setIsEdit(true)}
+                  >
+                    <Icon source={EditMinor} />
+                  </div>
+                  <div onClick={handleConfirmDelete} className="cursor-pointer">
+                    <Icon source={MobileCancelMajor} />
+                  </div>
+                </div>
               </div>
-              <div className="group-header-action">
-                <Switch
-                  uncheckedIcon={false}
-                  onColor="#008060"
-                  checkedIcon={false}
-                  checked={item?.checked}
-                  onChange={handleChangeSwitch}
-                  height={20}
-                  width={40}
-                />
-                <div className="cursor-pointer" onClick={() => handleUpRow({groupId, faqId: item?.id})}>
-                  <Icon source={ChevronUpMinor} />
-                </div>
-                <div className="cursor-pointer" onClick={() => handleDownRow({groupId, faqId: item?.id})}>
-                  <Icon source={ChevronDownMinor} />
-                </div>
-                <div className="cursor-pointer" onClick={() => setIsEdit(true)}>
-                  <Icon source={EditMinor} />
-                </div>
-                <div onClick={handleConfirmDelete} className="cursor-pointer">
-                  <Icon source={MobileCancelMajor} />
-                </div>
-              </div>
-            </div>
 
-            <Collapsible
-              open={open}
-              id="basic-collapsible"
-              transition={{ duration: "250ms", timingFunction: "ease-in-out" }}
-              expandOnPrint
-            >
-              <div className="item-answer">{item?.answer}</div>
-            </Collapsible>
-          </div>
-        )}
-      </Card.Section>
-    </Card>
-    {isConfirmDelete && <ModalConfirmDelete setOpen={setIsConfirmDelete} handleDelete={handleDeleteFaq} />}
+              <Collapsible
+                open={open}
+                id="basic-collapsible"
+                transition={{
+                  duration: "250ms",
+                  timingFunction: "ease-in-out",
+                }}
+                expandOnPrint
+              >
+                <div className="item-answer">{item?.answer}</div>
+              </Collapsible>
+            </div>
+          )}
+        </Card.Section>
+      </Card>
+      {isConfirmDelete && (
+        <ModalConfirmDelete
+          setOpen={setIsConfirmDelete}
+          handleDelete={handleDeleteFaq}
+        />
+      )}
     </>
   );
 }

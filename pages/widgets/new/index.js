@@ -1,8 +1,6 @@
 import axios from "axios";
 import Head from "next/head";
-import router from "next/router";
 import { useEffect, useState } from "react";
-import LayoutDefault from "../../../components/LayoutDefault";
 import SliderEdit from "../../../components/SliderEdit";
 
 function WidgetsNew() {
@@ -35,7 +33,6 @@ function WidgetsNew() {
       <Head>Widgets New</Head>
       <SliderEdit
         data={{ shop, plan }}
-        // handleOpenUpgradePlan={handleOpenUpgradePlan}
         slider={slider}
         setSlider={setSlider}
         setIdEdit={setIdEdit}

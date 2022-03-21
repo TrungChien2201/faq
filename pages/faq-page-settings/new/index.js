@@ -1,9 +1,9 @@
 import axios from "axios";
 import Head from "next/head";
 import { useEffect, useState } from "react";
-import SliderEdit from "../../../components/SliderEdit";
+import FaqSettingEdit from "../../../components/FaqSettingEdit";
 
-function WidgetsEdit() {
+function FaqSettingNew() {
   const [plan, setPlan] = useState("");
   const [slider, setSlider] = useState([]);
   const [idEdit, setIdEdit] = useState("");
@@ -30,8 +30,8 @@ function WidgetsEdit() {
   }, []);
   return (
     <>
-      <Head>Widgets Edit</Head>
-      <SliderEdit
+      <Head>Faq Settings New</Head>
+      <FaqSettingEdit
         data={{ shop, plan }}
         slider={slider}
         setSlider={setSlider}
@@ -45,4 +45,4 @@ function WidgetsEdit() {
   );
 }
 
-export default WidgetsEdit;
+export default FaqSettingNew;

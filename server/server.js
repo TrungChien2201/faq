@@ -9,6 +9,7 @@ import Router from "koa-router";
 import Shop from "../models/shop.model";
 import Widget from "../models/widget.model"
 import Faq from "../models/faq.model";
+import FaqSetting from "../models/faq-setting.model";
 import {
   storeCallback,
   loadCallback,
@@ -1658,6 +1659,123 @@ app.prepare().then(async () => {
     }
   });
   /*end faq*/
+
+  /*faq setting*/
+  router.post("/api/faq-setting", verifyAPI, bodyParser(), async (ctx) => {
+    let { shop } = ctx.request.body;
+
+    try {
+      let faqSetting = await FaqSetting.find({ shop }).sort({ createdAt: -1 });
+      ctx.status = 200;
+      ctx.body = {
+        success: true,
+        data: {
+          faqSetting,
+        },
+      };
+    } catch (error) {
+      ctx.status = 400;
+      ctx.body = {
+        success: false,
+      };
+    }
+  });
+
+  router.post("/api/faq-setting/new", verifyAPI, bodyParser(), async (ctx) => {
+    let { shop, config } = ctx.request.body;
+
+    try {
+      let faqSetting = new FaqSetting({
+        shop,
+        config: {
+          ...config,
+        },
+      });
+      await faqSetting.save();
+      ctx.status = 200;
+      ctx.body = {
+        success: true,
+        data: {
+          faqSetting,
+        },
+      };
+    } catch (error) {
+      console.log(error);
+      ctx.status = 400;
+      ctx.body = {
+        success: false,
+      };
+    }
+  });
+
+  router.post("/api/faq-setting/:id", verifyAPI, bodyParser(), async (ctx) => {
+    let { shop } = ctx.request.body;
+    let { id } = ctx.params;
+
+    try {
+      let faqSetting = await FaqSetting.findById(id);
+      ctx.status = 200;
+      ctx.body = {
+        success: true,
+        data: {
+          faqSetting,
+        },
+      };
+    } catch (error) {
+      console.log(error);
+      ctx.status = 400;
+      ctx.body = {
+        success: false,
+      };
+    }
+  });
+
+  router.put("/api/faq-setting/:id", verifyAPI, bodyParser(), async (ctx) => {
+    let { shop, config } = ctx.request.body;
+    let { id } = ctx.params;
+
+    try {
+      let faqSetting = await FaqSetting.findByIdAndUpdate(
+        id,
+        { $set: { config: config } },
+        { new: true }
+      );
+      ctx.status = 200;
+      ctx.body = {
+        success: true,
+        data: {
+          faqSetting,
+        },
+      };
+    } catch (error) {
+      console.log(error);
+      ctx.status = 400;
+      ctx.body = {
+        success: false,
+      };
+    }
+  });
+
+  router.delete("/api/faq-setting/:id", verifyAPI, bodyParser(), async (ctx) => {
+    let { shop } = ctx.request.body;
+    let { id } = ctx.params;
+
+    try {
+      await FaqSetting.deleteOne({ _id: id });
+      ctx.status = 200;
+      ctx.body = {
+        success: true,
+      };
+    } catch (error) {
+      console.log(error);
+      ctx.status = 400;
+      ctx.body = {
+        success: false,
+      };
+    }
+  });
+
+  /*end*/
   router.post("/api/install_code", verifyAPI, bodyParser(), async (ctx) => {
     let { shop, themeId } = ctx.request.body;
 

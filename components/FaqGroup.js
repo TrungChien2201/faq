@@ -53,6 +53,9 @@ function FaqGroup({
     if (idEditAddNew === group?.id) {
       setIsEdit(true);
     }
+    return () => {
+      setIsEdit(false)
+    }
   }, [idEditAddNew]);
 
   useEffect(() => {
@@ -66,11 +69,11 @@ function FaqGroup({
 
   const onCancleEditGroup = useCallback(() => {
     if (idEditAddNew === group?.id) {
-      deleteGroup(group?.id, formik.values.group);
+      deleteGroup(group?.id, formik.values.groups);
     }
     setIsEdit(false);
     setGroupName(group?.name);
-  }, [isEdit, formik.values.group]);
+  }, [isEdit, formik.values.groups]);
 
   const handleChangeValueNameGroup = (value) => {
     setGroupName(value);
@@ -89,9 +92,9 @@ function FaqGroup({
 
   const handleDeleteGroup = useCallback(
     () => {
-      deleteGroup(group?.id, formik.values.group);
+      deleteGroup(group?.id, formik.values.groups);
     },
-    [formik.values.group, group?.id]
+    [formik.values.groups, group?.id]
   );
 
   const handleConfirmDelete = useCallback(

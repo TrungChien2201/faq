@@ -13,7 +13,7 @@ function Faqs() {
   const shop = typeof window !== "undefined" && localStorage.getItem("shop");
   const formik = useFormik({
     initialValues: {
-      group: [],
+      groups: [],
     },
   });
 
@@ -31,14 +31,15 @@ function Faqs() {
       id: data?.data?.faq?._id,
       ...data.data?.faq?.config,
     };
-    formik.values.group?.push(newData);
-    // formik.handleChange({ target: { id: "group", value: newGroup } });
+    formik.values.groups?.push(newData);
+        // formik.handleChange({ target: { id: "group", value: newGroup } });
+
     setIdEditAddNew(data?.data?.faq?._id);
   }, [formik]);
 
   const handleEditGroup = useCallback(
     async ({ id, name, faq, checked }) => {
-      const group = formik?.values?.group?.find((item) => item?.id === id);
+      const group = formik?.values?.groups?.find((item) => item?.id === id);
       const datas = {
         shop,
         config: {
@@ -51,14 +52,14 @@ function Faqs() {
       const { data } = await RequestCustom.put(`/api/faq-group/${id}`, datas);
 
       if (data) {
-        const newGroups = formik.values.group?.map((item) => {
+        const newGroups = formik.values.groups?.map((item) => {
           if (item?.id === id) {
             return { ...item, ...datas["config"] };
           }
           return { ...item };
         });
         formik.handleReset();
-        formik.setFieldValue("group", newGroups);
+        formik.setFieldValue("groups", newGroups);
       }
       setIdEditAddNew("");
       return true;
@@ -76,7 +77,7 @@ function Faqs() {
         ...item?.config,
         id: item?._id,
       }));
-      formik.setValues({ group: newFaqGroup });
+      formik.setValues({ groups: newFaqGroup });
     }
   };
 
@@ -86,9 +87,9 @@ function Faqs() {
 
   const handleAddFaq = useCallback(
     async (id) => {
-      const newGroup = formik.values.group?.find((item) => item?.id === id);
+      const newGroup = formik.values.groups?.find((item) => item?.id === id);
       const idRandom = Math.random().toString(36).slice(2);
-      const newValue = formik.values.group?.map((item) => {
+      const newValue = formik.values.groups?.map((item) => {
         if (item?.id === id) {
           return {
             ...item,
@@ -126,7 +127,7 @@ function Faqs() {
       };
       const { data } = await RequestCustom.put(`/api/faq/new`, datas);
       if (data) {
-        formik.handleChange({ target: { id: "group", value: newValue } });
+        formik.handleChange({ target: { id: "groups", value: newValue } });
         setIdEditFaqGroup(data?.data?.faq?._id);
         setFaqItem(idRandom);
       }
@@ -136,7 +137,7 @@ function Faqs() {
 
   const editFaq = useCallback(
     async ({ groupId, faqId, answer, question, checked = null }) => {
-      const newGroup = formik?.values?.group?.find(
+      const newGroup = formik?.values?.groups?.find(
         (item) => item?.id === groupId
       );
       const newFaq = newGroup?.faq?.map((item) => {
@@ -150,7 +151,7 @@ function Faqs() {
         }
         return { ...item };
       });
-      const newValue = formik?.values?.group?.map((item) => {
+      const newValue = formik?.values?.groups?.map((item) => {
         if (item?.id === groupId) {
           return { ...item, faq: newFaq };
         }
@@ -163,7 +164,7 @@ function Faqs() {
       const { data } = await RequestCustom.put(`/api/faq/new`, datas);
       if (data) {
         formik.handleReset();
-        formik.handleChange({ target: { id: "group", value: newValue } });
+        formik.handleChange({ target: { id: "groups", value: newValue } });
       }
       setIdEditFaqGroup("");
       setFaqItem("");
@@ -174,11 +175,11 @@ function Faqs() {
 
   const deleteFaq = useCallback(
     async ({ groupId, faqId }) => {
-      const newGroup = formik?.values?.group?.find(
+      const newGroup = formik?.values?.groups?.find(
         (item) => item?.id === groupId
       );
       const newFaq = newGroup?.faq?.filter((item) => item?.id !== faqId);
-      const newValue = formik?.values?.group?.map((item) => {
+      const newValue = formik?.values?.groups?.map((item) => {
         if (item?.id === groupId) {
           return { ...item, faq: newFaq };
         }
@@ -191,7 +192,7 @@ function Faqs() {
       const { data } = await RequestCustom.put(`/api/faq/new`, datas);
       if (data) {
         formik.handleReset();
-        formik.handleChange({ target: { id: "group", value: newValue } });
+        formik.handleChange({ target: { id: "groups", value: newValue } });
       }
       return true;
     },
@@ -199,7 +200,7 @@ function Faqs() {
   );
 
   const handleUpRow = async({ groupId, faqId }) => {
-    const newGroup = _.find(formik.values.group, { id: groupId });
+    const newGroup = _.find(formik.values.groups, { id: groupId });
     const {faq} = newGroup;
     const indexItem = _.findIndex(faq, { id: faqId });
     if (faq[indexItem - 1] && faq[indexItem]) {
@@ -217,18 +218,18 @@ function Faqs() {
       const { data } = await RequestCustom.put(`/api/faq/new`, datas);
       if (data) {
         formik.handleReset();
-        formik.handleChange({ target: { id: "group", value: newValue } });
+        formik.handleChange({ target: { id: "groups", value: newValue } });
       }
     }
   };
 
   const handleDownRow = async({ groupId, faqId }) => {
-    const newGroup = _.find(formik.values.group, { id: groupId });
+    const newGroup = _.find(formik.values.groups, { id: groupId });
     const {faq} = newGroup;
     const indexItem = _.findIndex(faq, { id: faqId });
     if (faq[indexItem + 1] && faq[indexItem]) {
       let newFaq = arrayMove(faq, indexItem, indexItem + 1);
-      const newValue = formik?.values?.group?.map((item) => {
+      const newValue = formik?.values?.groups?.map((item) => {
         if (item?.id === groupId) {
           return { ...item, faq: newFaq };
         }
@@ -241,7 +242,7 @@ function Faqs() {
       const { data } = await RequestCustom.put(`/api/faq/new`, datas);
       if (data) {
         formik.handleReset();
-        formik.handleChange({ target: { id: "group", value: newValue } });
+        formik.handleChange({ target: { id: "groups", value: newValue } });
       }
     }
   };
@@ -251,7 +252,7 @@ function Faqs() {
       const { data } = await RequestCustom.delete(`api/faq-group/${id}`);
       if (data?.success) {
         const newGroup = group.filter((item) => item?.id !== id);
-        formik.handleChange({ target: { id: "group", value: newGroup } });
+        formik.handleChange({ target: { id: "groups", value: newGroup } });
       }
       setIdEditAddNew("");
     },
@@ -305,7 +306,7 @@ function Faqs() {
         <Layout>
           <Layout.Section>
             <div className="layout-group">
-              {formik.values.group.map((item) => (
+              {formik?.values?.groups?.length > 0 && formik.values.groups.map((item) => (
                 <React.Fragment key={item?.id}>
                   {renderGroup(item)}
                 </React.Fragment>

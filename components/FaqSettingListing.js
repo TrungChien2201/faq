@@ -16,13 +16,12 @@ import { DeleteMinor, EditMinor } from "@shopify/polaris-icons";
 
 import ModalConfirmDelete from "./ModalConfirmDelete";
 import moment from "moment";
-import { AiOutlineCopy } from "react-icons/ai";
 import router from "next/router";
 import RequestCustom from "../constants/request";
 
 const heading = [
   { title: "Name" },
-  // { title: "Shortcode" },
+//   { title: "Shortcode" },
   { title: "Date" },
   { title: "" },
 ];
@@ -32,7 +31,7 @@ const resourceName = {
   plural: "customers",
 };
 
-const SliderListing = (props) => {
+const FaqListing = (props) => {
   // const NODE_ENV = "development";
   const app = NODE_ENV === "development" ? null : null;
   const {
@@ -48,7 +47,7 @@ const SliderListing = (props) => {
   const [faqGroupList, setFaqGroupList] = useState([]);
 
   const openSliderEdit = () => {
-    router.push("/widgets/new");
+    router.push("/faq-page-settings/new");
   };
 
   const toggleError = useCallback(() => setActiveError(true), [activeError]);
@@ -63,21 +62,16 @@ const SliderListing = (props) => {
   }, [activeError]);
 
   const getConfig = async () => {
-    // let sessionToken = "";
     let data = { shop };
-    // if (NODE_ENV === "production") {
-    //   sessionToken = await getSessionToken(app);
-    // }
-
     let config = {
       headers: {
         "x-access-token": accessToken,
       },
     };
     try {
-      axios.post(`/api/widget-faq`, data, config).then(({ data }) => {
+      axios.post(`/api/faq-setting`, data, config).then(({ data }) => {
         if (data?.success) {
-          setSlider(data?.data?.widget);
+          setSlider(data?.data?.faqSetting);
         }
       });
     } catch (error) {
@@ -111,12 +105,6 @@ const SliderListing = (props) => {
 
   const handleDeleteSlider = useCallback(
     async () => {
-      // let sessionToken = "";
-
-      // if (NODE_ENV === "production") {
-      //   sessionToken = await getSessionToken(app);
-      // }
-
       let config = {
         headers: {
           "x-access-token": accessToken,
@@ -124,7 +112,7 @@ const SliderListing = (props) => {
       };
       let data = { shop };
       try {
-        axios.delete(`/api/widget-faq/${idSilerDelete}`, data, config).then(({ data }) => {
+        axios.delete(`/api/faq-setting/${idSilerDelete}`, data, config).then(({ data }) => {
           if (data?.success) {
             setActiveSuccess(true);
             const newSlider = slider.filter((item) => item._id !== idSilerDelete);
@@ -160,19 +148,11 @@ const SliderListing = (props) => {
   }, []);
 
   const handleOpenEdit = (id) => {
-    router.push(`/widgets/${id}`);
+    router.push(`/faq-page-settings/${id}`);
   };
-
-  const handleCopy = useCallback(() => {
-    setActiveSuccess(1);
-  }, []);
 
   useEffect(() => {
     getConfig();
-  }, []);
-
-  const renderShortCode = useCallback((id) => {
-    return `<div id="simesy-testimonial-${id}" data-view-id="${id}"></div>`;
   }, []);
 
   const {
@@ -211,9 +191,9 @@ const SliderListing = (props) => {
   return (
     <Frame>
       <Page
-        title="Manage Widgets"
+        title="Faq Settings"
         primaryAction={{
-          content: "Add Widget",
+          content: "Add Setting",
           onAction: openSliderEdit,
         }}
       >
@@ -243,7 +223,7 @@ const SliderListing = (props) => {
           {openDelete && (
             <ModalConfirmDelete
               setOpen={SetOpenDelete}
-              title="Remove view"
+              title="Remove Setting"
               id={idSilerDelete}
               handleDelete={handleDeleteSlider}
             />
@@ -254,4 +234,4 @@ const SliderListing = (props) => {
   );
 };
 
-export default SliderListing;
+export default FaqListing;

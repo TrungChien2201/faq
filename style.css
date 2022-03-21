@@ -631,6 +631,11 @@ select.select {
   width: 60%;
 }
 
+.icon-down .Polaris-Icon {
+  width: 26px;
+  height: 26px;
+}
+
 .cursor-pointer {
   cursor: pointer;
 }

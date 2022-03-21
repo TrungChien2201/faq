@@ -17,8 +17,9 @@ import IframePreview from "./IframePreview";
 import router from "next/router";
 import RequestCustom from "../constants/request";
 import WidgetTabLeft from "./WidgetTabLeft";
+import FaqSettingTabLeft from "./FaqSettingTabLeft";
 
-const SliderEdit = (props) => {
+const FaqSettingEdit = (props) => {
   const { idEdit, setIdEdit, data, slider, accessToken } = props;
 
   const [activeSuccess, setActiveSuccess] = useState(0);
@@ -29,8 +30,25 @@ const SliderEdit = (props) => {
   const [errorNameWidget, setErrorNameWidget] = useState("");
   const formik = useFormik({
     initialValues: {
+      groups: "",
+      headerBackgroundColor: "#32a3cb",
+      headerHeight: "300",
+      showPageTitle: true,
+      pageTitle: "Frequently Asked Questions",
+      pageTitleSize: "50",
+
+      pageTitleColor: "rgba(255,255,255,1)",
+      showPageIntro: true,
+      pageIntro:
+        "Check most frequently asked questions here, if you still need help then please contact us at <a href='mailto:yellow@hello.com'>yellow@hello.com</a>.",
+      pageIntroSize: "18",
+      pageIntroColor: "rgba(255,255,255,.9)",
+      showSearchBox: true,
+      searchPlaceholder: "What can we help you with?",
+      searchNotFoundText: "Oops, your search did not match any FAQs",
+      groupNameSize: "24",
+      groupNameColor: "#000",
       faqName: "",
-      faqGroup: "",
       faqStyleID: ["style1"],
       faqBehavior: ["accordion"],
       faqNameTag: ["none"],
@@ -67,6 +85,26 @@ const SliderEdit = (props) => {
       },
     },
     faqIconOpenColor: {
+      color: {
+        visible: false,
+      },
+    },
+    headerBackgroundColor: {
+      color: {
+        visible: false,
+      },
+    },
+    pageTitleColor: {
+      color: {
+        visible: false,
+      },
+    },
+    pageIntroColor: {
+      color: {
+        visible: false,
+      },
+    },
+    groupNameColor: {
       color: {
         visible: false,
       },
@@ -117,7 +155,7 @@ const SliderEdit = (props) => {
     if (idEdit) {
       try {
         const { data } = await RequestCustom.put(
-          `/api/widget-faq/${idEdit}`,
+          `/api/faq-setting/${idEdit}`,
           datas
         );
         if (data?.success) {
@@ -129,9 +167,9 @@ const SliderEdit = (props) => {
       return;
     }
     try {
-      const { data } = await RequestCustom.post(`/api/widget-faq/new`, datas);
+      const { data } = await RequestCustom.post(`/api/faq-setting/new`, datas);
       if (data?.success) {
-        setIdEdit(data?.data?.widget?._id);
+        setIdEdit(data?.data?.faqSetting?._id);
         setActiveSuccess(1);
       }
     } catch (error) {
@@ -158,9 +196,6 @@ const SliderEdit = (props) => {
     if (activeSuccess === 2) {
       message = "Edit Success";
     }
-    if (activeSuccess === 3) {
-      message = "Install Success";
-    }
     setTimeout(() => {
       setActiveSuccess(0);
     }, 2000);
@@ -169,10 +204,10 @@ const SliderEdit = (props) => {
   }, [activeSuccess]);
 
   const handleBack = () => {
-    router.push("/widgets");
+    router.push("/faq-page-settings");
   };
 
-  const getWidgetDetail = async (id) => {
+  const getFaqSettingDetail = async (id) => {
     let data = { shop: data?.shop };
 
     let config = {
@@ -181,11 +216,11 @@ const SliderEdit = (props) => {
       },
     };
     try {
-      axios.post(`/api/widget-faq/${id}`, data, config).then(({ data }) => {
+      axios.post(`/api/faq-setting/${id}`, data, config).then(({ data }) => {
         if (data?.success) {
           const newValue = Object.assign(
             formik.values,
-            data?.data?.widget?.config
+            data?.data?.faqSetting?.config
           );
           formik.setValues({
             ...newValue,
@@ -206,7 +241,7 @@ const SliderEdit = (props) => {
 
   useEffect(() => {
     if (idEdit) {
-      getWidgetDetail(idEdit);
+      getFaqSettingDetail(idEdit);
     }
   }, [idEdit]);
 
@@ -307,10 +342,10 @@ const SliderEdit = (props) => {
               <FormLayout>
                 <div>
                   <div className={"widget-edit"}>
-                    <WidgetTabLeft
+                    <FaqSettingTabLeft
                       errorNameWidget={errorNameWidget}
                       formik={formik}
-                      faqGroup={faqGroup}
+                      groups={faqGroup}
                       handleChange={handleChange}
                       handleChangeSetColor={handleChangeSetColor}
                       handleOpenSetColor={handleOpenSetColor}
@@ -338,4 +373,4 @@ const SliderEdit = (props) => {
   );
 };
 
-export default SliderEdit;
+export default FaqSettingEdit;

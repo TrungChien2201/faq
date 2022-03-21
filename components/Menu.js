@@ -32,6 +32,12 @@ export default function MenuHeader() {
             // exactMatch: true,
           },
           {
+            url: "/faq-page-settings",
+            label: "FAQ Page Settings",
+            icon: QuestionMarkMajor,
+            // exactMatch: true,
+          },
+          {
             url: "/widgets",
             label: "Widgets",
             icon: ThemesMajor,
