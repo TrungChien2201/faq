@@ -165,7 +165,9 @@ app.prepare().then(async () => {
   };
 
   const verifyCookie = async (ctx, next) => {
-    return next();
+    if(process.env.NODE_ENV === "development") {
+      return next();
+    }
     let shop = ctx.cookies.get("shop");
     let token = ctx.cookies.get("x-access-token");
 
@@ -190,15 +192,18 @@ app.prepare().then(async () => {
   };
 
   const verifyAPI = async (ctx, next) => {
-    // let shop = ctx.cookies.get("shop");
-    // let token = ctx.headers["x-access-token"] || ctx.headers["authorization"];
-    // if (!verifyToken(token)) {
-    //   ctx.redirect(`/authorize?shop=${shop}`);
-    //   ctx.status = 401;
-    //   ctx.body = {
-    //     success: false,
-    //   };
-    // }
+    if(process.env.NODE_ENV === "development") {
+      return next();
+    }
+    let shop = ctx.cookies.get("shop");
+    let token = ctx.headers["x-access-token"] || ctx.headers["authorization"];
+    if (!verifyToken(token)) {
+      ctx.redirect(`/authorize?shop=${shop}`);
+      ctx.status = 401;
+      ctx.body = {
+        success: false,
+      };
+    }
 
     return next();
   };
@@ -659,8 +664,7 @@ app.prepare().then(async () => {
   });
 
   router.get("/", verifyCookie, async (ctx) => {
-    // let shop = ctx.cookies.get("shop");
-    let shop = "chienvu-store.myshopify.com";
+    let shop = ctx.cookies.get("shop");
     let shopData = await Shop.findOne({ shop });
 
     if (!shopData) {
@@ -1259,7 +1263,6 @@ app.prepare().then(async () => {
     "/api/get_pages",
     verifyAPI,
     bodyParser(),
-    // verifyRequest({ accessMode: "offline" }),
     async (ctx) => {
       let { shop } = ctx.request.body;
 
@@ -1291,7 +1294,6 @@ app.prepare().then(async () => {
     "/api/update_page",
     verifyAPI,
     bodyParser(),
-    // verifyRequest({ accessMode: "offline" }),
     async (ctx) => {
       let { shop, page_id, body_html } = ctx.request.body;
 
