@@ -26,10 +26,11 @@ const SliderEdit = (props) => {
   const [isSubmit, setIsSubmit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [faqGroup, setFaqGroup] = useState([]);
+  const [faqGroupIframe, setFaqGroupIframe] = useState([]);
   const [errorNameWidget, setErrorNameWidget] = useState("");
   const formik = useFormik({
     initialValues: {
-      faqName: "",
+      title: "",
       faqGroup: "",
       faqStyleID: ["style1"],
       faqBehavior: ["accordion"],
@@ -42,7 +43,6 @@ const SliderEdit = (props) => {
       faqQuestionOpenColor: "#11a9d5",
       faqIconCloseColor: "#11a9d5",
       faqIconOpenColor: "#11a9d5",
-      faqCssClass: "",
     },
     onSubmit: (values) => {
       handleSubmit(values);
@@ -223,14 +223,18 @@ const SliderEdit = (props) => {
     };
     const respone = await RequestCustom.post("/api/faq", datas);
     if (respone?.data?.data?.faq?.length > 0) {
-      const newFaqGroup = [
-        { label: "", value: "" },
-        ...respone?.data?.data?.faq?.map((item) => ({
-          label: item?.config?.name,
-          value: item?._id,
-        })),
-      ];
+      const newFaqGroup = respone?.data?.data?.faq?.map((item) => ({
+        label: item?.config?.name,
+        value: item?._id,
+      }));
+      const newFaqGroupIframe = respone?.data?.data?.faq?.map((item) => ({
+          id: item?._id,
+          name: item?.config?.name,
+          faqs: item?.config?.faqs,
+      }));
+
       setFaqGroup(newFaqGroup);
+      setFaqGroupIframe(newFaqGroupIframe);
     }
   }, [data?.shop]);
 
@@ -268,12 +272,12 @@ const SliderEdit = (props) => {
   };
 
   const beforeSubmit = useCallback(() => {
-    if (formik.values.faqName) {
+    if (formik.values.title) {
       handleSubmit();
       setErrorNameWidget("");
       return;
     }
-    setErrorNameWidget("Name can't be blank.");
+    setErrorNameWidget("Title can't be blank.");
   }, [formik]);
 
   const userMenuMarkup = useCallback(
@@ -326,6 +330,8 @@ const SliderEdit = (props) => {
                 shop={data?.shop}
                 accessToken={accessToken}
                 formik={formik}
+                isFaq={true}
+                faqGroup={faqGroupIframe}
               />
             </Layout.Section>
             {messageSuccess()}

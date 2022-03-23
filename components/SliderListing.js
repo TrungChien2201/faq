@@ -10,6 +10,8 @@ import {
   IndexTable,
   useIndexResourceState,
   Icon,
+  TextStyle,
+  FormLayout,
 } from "@shopify/polaris";
 import axios from "axios";
 import { DeleteMinor, EditMinor } from "@shopify/polaris-icons";
@@ -21,7 +23,7 @@ import router from "next/router";
 import RequestCustom from "../constants/request";
 
 const heading = [
-  { title: "Name" },
+  { title: "Title" },
   // { title: "Shortcode" },
   { title: "Date" },
   { title: "" },
@@ -109,34 +111,35 @@ const SliderListing = (props) => {
     setIdSliderDelete(id);
   }, []);
 
-  const handleDeleteSlider = useCallback(
-    async () => {
-      // let sessionToken = "";
+  const handleDeleteSlider = useCallback(async () => {
+    // let sessionToken = "";
 
-      // if (NODE_ENV === "production") {
-      //   sessionToken = await getSessionToken(app);
-      // }
+    // if (NODE_ENV === "production") {
+    //   sessionToken = await getSessionToken(app);
+    // }
 
-      let config = {
-        headers: {
-          "x-access-token": accessToken,
-        },
-      };
-      let data = { shop };
-      try {
-        axios.delete(`/api/widget-faq/${idSilerDelete}`, data, config).then(({ data }) => {
+    let config = {
+      headers: {
+        "x-access-token": accessToken,
+      },
+    };
+    let data = { shop };
+    try {
+      axios
+        .delete(`/api/widget-faq/${idSilerDelete}`, data, config)
+        .then(({ data }) => {
           if (data?.success) {
             setActiveSuccess(true);
-            const newSlider = slider.filter((item) => item._id !== idSilerDelete);
+            const newSlider = slider.filter(
+              (item) => item._id !== idSilerDelete
+            );
             setSlider(newSlider);
           }
         });
-      } catch (error) {
-        toggleError();
-      }
-    },
-    [slider, idSilerDelete]
-  );
+    } catch (error) {
+      toggleError();
+    }
+  }, [slider, idSilerDelete]);
 
   const getListFaqGroup = useCallback(async () => {
     const datas = {
@@ -183,15 +186,15 @@ const SliderListing = (props) => {
 
   const rowMarkup =
     slider?.length > 0 &&
-    slider?.map(({ config: { faqName }, _id, createdAt }, index) => (
+    slider?.map(({ config: { title }, _id, createdAt }, index) => (
       <IndexTable.Row
         id={_id}
         key={_id}
         position={index}
         selected={selectedResources.includes(_id)}
       >
-        <IndexTable.Cell>{faqName}</IndexTable.Cell>
-        
+        <IndexTable.Cell>{title}</IndexTable.Cell>
+
         <IndexTable.Cell>
           {moment(createdAt).format("DD/MM/YYYY")}
         </IndexTable.Cell>
@@ -211,7 +214,7 @@ const SliderListing = (props) => {
   return (
     <Frame>
       <Page
-        title="Manage Widgets"
+        title="Widgets"
         primaryAction={{
           content: "Add Widget",
           onAction: openSliderEdit,
@@ -220,7 +223,7 @@ const SliderListing = (props) => {
         <Layout>
           <Layout.Section>
             <Card>
-              {slider?.length > 0 && (
+              {slider?.length > 0 ? (
                 <>
                   <IndexTable
                     resourceName={resourceName}
@@ -235,6 +238,19 @@ const SliderListing = (props) => {
                     {rowMarkup}
                   </IndexTable>
                 </>
+              ) : (
+                <Card>
+                  <div className="faq-empty">
+                    <FormLayout>
+                      <TextStyle variation="strong">
+                        Create widget to display FAQs anywhere
+                      </TextStyle>
+                      <Button onClick={openSliderEdit} primary>
+                        Add Widget
+                      </Button>
+                    </FormLayout>
+                  </div>
+                </Card>
               )}
             </Card>
           </Layout.Section>

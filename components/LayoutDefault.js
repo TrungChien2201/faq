@@ -77,7 +77,7 @@ export default function LayoutDefault({ children, shop, title }) {
 
   const userMenuMarkup = (
     <div className="header-right">
-      <div ref={refMailQuota} className="email-quota">
+      {/* <div ref={refMailQuota} className="email-quota">
         <Icon source={CircleAlertMajor} color="primary" />
         <div style={{ display: "flex", alignItems: "center" }}>
           View quota: {totalViewWidget}/1000
@@ -86,7 +86,7 @@ export default function LayoutDefault({ children, shop, title }) {
       <div className="dropdown-email" ref={refMailQuotaDropDownOverlay} />
       <div ref={refMailQuotaDropDown} className="header-email-quota">
         {renderDropDownEmailQuota()}
-      </div>
+      </div> */}
       <Link external url={`https://${shop}`}>
         {shop}
       </Link>

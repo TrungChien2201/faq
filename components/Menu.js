@@ -19,23 +19,17 @@ export default function MenuHeader() {
       <Navigation.Section
         title="Welcome! 👋"
         items={[
+          // {
+          //   url: "/",
+          //   label: "Dashboard",
+          //   icon: HomeMajor,
+          //   exactMatch: true,
+          // },
           {
             url: "/",
-            label: "Dashboard",
-            icon: HomeMajor,
-            exactMatch: true,
-          },
-          {
-            url: "/faqs",
             label: "FAQs",
             icon: QuestionMarkMajor,
-            // exactMatch: true,
-          },
-          {
-            url: "/faq-page-settings",
-            label: "FAQ Page Settings",
-            icon: QuestionMarkMajor,
-            // exactMatch: true,
+            exactMatch: true,
           },
           {
             url: "/widgets",
@@ -43,9 +37,15 @@ export default function MenuHeader() {
             icon: ThemesMajor,
             exactMatch: true,
           },
+          {
+            url: "/faq-page-settings",
+            label: "FAQ Page Settings",
+            icon: QuestionMarkMajor,
+            exactMatch: true,
+          },
         ]}
       />
-      
+
       <Navigation.Section
         title="Support"
         items={[

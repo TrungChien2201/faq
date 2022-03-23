@@ -1,68 +1,35 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Liquid } from "liquidjs";
-import template from "../liquid_templates/widget-template.liquid";
-import { getSessionToken } from "@shopify/app-bridge-utils";
-import { useAppBridge } from "@shopify/app-bridge-react";
-import axios from "axios";
+import templateFaq from "../liquid_templates/faq-template.liquid";
+import templateFaqSetting from "../liquid_templates/faq-page-template.liquid";
 
-export default function IframePreview({ formik, shop, accessToken }) {
+export default function IframePreview({ formik, shop, accessToken, faqGroup, isFaq }) {
   const iframe = useRef();
   const engine = new Liquid();
-  const app = NODE_ENV === "development" ? null : null;
-  const [testimonials, setTestimonials] = useState([]);
+  // const app = NODE_ENV === "development" ? null : null;
+  const [faqGroups, setFaqGroups] = useState([]);
 
-  const getTestimonial = async () => {
-    // let sessionToken = "";
+  const renderGroupSelected = useCallback(async (group, faqGroups) => {
+    const newGroup = group?.map(item => {
+      return faqGroups?.find(groups => groups?.id === item)
+    })
+    setFaqGroups(newGroup);
+  },[]);
 
-    // if (NODE_ENV === "production") {
-    //   sessionToken = await getSessionToken(app);
-    // }
-
-    let config = {
-      headers: {
-        // Authorization: `Bearer ${sessionToken}`,
-        "x-access-token": accessToken,
-      },
-    };
-    let datas = {
-      shop: shop,
-      shortCode: { ...formik.values },
-    };
-    try {
-      const { data } = await axios.post(
-        `/api/get_testimonial_widget`,
-        datas,
-        config
-      );
-      if (data?.success) {
-        setTestimonials(data?.data?.shortCode?.testimonials);
-      }
-    } catch (error) {
-      console.log(error);
+  useEffect(() => {
+    if (formik?.values?.groups?.length > 0) {
+      renderGroupSelected(formik.values.groups, faqGroup);
     }
-  };
+  }, [formik.values.groups, faqGroup]);
 
   useEffect(() => {
-    getTestimonial();
-  }, [
-    formik.values.display_testimonials_from,
-    formik.values.specific_testimonial,
-    formik.values.exclude_testimonial,
-    formik.values.number_of_total_testimonials,
-    formik.values.random_order,
-    formik.values.testimonial_order_by,
-    formik.values.testimonial_order,
-    formik.values.tp_per_page,
-  ]);
-
-  useEffect(() => {
-    if (formik) {
+    if (faqGroups) {
       render({
-        config: formik.values,
-        testimonials,
+        // config: formik.values,
+        groups: faqGroups,
       });
     }
-  }, [formik, testimonials]);
+  }, [faqGroups]);
 
   const render = async (data) => {
     const document = iframe.current.contentDocument;
@@ -84,9 +51,9 @@ export default function IframePreview({ formik, shop, accessToken }) {
     let style3 = document.createElement("link");
     style3.rel = "stylesheet";
     style3.type = "text/css";
-    style3.href = "https://testimonial-dev.simesy.com/testimonial-slider-preview.css";
+    style3.href = `${HOST}/${isFaq ? 'faq-preview.css':'faq-page-preview.css'}`;
     head.appendChild(style3);
-    let html = await engine.parseAndRender(template, data);
+    let html = await engine.parseAndRender(isFaq ? templateFaq : templateFaqSetting, data);
     document.body.innerHTML = `
       <body>${html}</body>
     `;
@@ -104,7 +71,7 @@ export default function IframePreview({ formik, shop, accessToken }) {
       "https://cdnjs.cloudflare.com/ajax/libs/masonry/4.2.2/masonry.pkgd.min.js";
     document.body.appendChild(masonry);
     let script = document.createElement("script");
-    script.src = "https://testimonial-dev.simesy.com/testimonial-slider-preview.js";
+    script.src = `${HOST}/${isFaq ? 'faq-preview.js' : 'faq-page-preview.js'}`;
     document.body.appendChild(script);
   };
 

@@ -20,7 +20,7 @@ import router from "next/router";
 import RequestCustom from "../constants/request";
 
 const heading = [
-  { title: "Name" },
+  { title: "Title" },
 //   { title: "Shortcode" },
   { title: "Date" },
   { title: "" },
@@ -163,14 +163,14 @@ const FaqListing = (props) => {
 
   const rowMarkup =
     slider?.length > 0 &&
-    slider?.map(({ config: { faqName }, _id, createdAt }, index) => (
+    slider?.map(({ config: { title }, _id, createdAt }, index) => (
       <IndexTable.Row
         id={_id}
         key={_id}
         position={index}
         selected={selectedResources.includes(_id)}
       >
-        <IndexTable.Cell>{faqName}</IndexTable.Cell>
+        <IndexTable.Cell>{title}</IndexTable.Cell>
         
         <IndexTable.Cell>
           {moment(createdAt).format("DD/MM/YYYY")}

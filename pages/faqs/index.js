@@ -1,4 +1,11 @@
-import { Layout, Page } from "@shopify/polaris";
+import {
+  Button,
+  Card,
+  FormLayout,
+  Layout,
+  Page,
+  TextStyle,
+} from "@shopify/polaris";
 import arrayMove from "array-move";
 import { useFormik } from "formik";
 import _ from "lodash";
@@ -32,7 +39,7 @@ function Faqs() {
       ...data.data?.faq?.config,
     };
     formik.values.groups?.push(newData);
-        // formik.handleChange({ target: { id: "group", value: newGroup } });
+    // formik.handleChange({ target: { id: "group", value: newGroup } });
 
     setIdEditAddNew(data?.data?.faq?._id);
   }, [formik]);
@@ -199,9 +206,9 @@ function Faqs() {
     [formik]
   );
 
-  const handleUpRow = async({ groupId, faqId }) => {
+  const handleUpRow = async ({ groupId, faqId }) => {
     const newGroup = _.find(formik.values.groups, { id: groupId });
-    const {faqs} = newGroup;
+    const { faqs } = newGroup;
     const indexItem = _.findIndex(faqs, { id: faqId });
     if (faqs[indexItem - 1] && faqs[indexItem]) {
       let newFaq = arrayMove(faqs, indexItem, indexItem - 1);
@@ -223,9 +230,9 @@ function Faqs() {
     }
   };
 
-  const handleDownRow = async({ groupId, faqId }) => {
+  const handleDownRow = async ({ groupId, faqId }) => {
     const newGroup = _.find(formik.values.groups, { id: groupId });
-    const {faqs} = newGroup;
+    const { faqs } = newGroup;
     const indexItem = _.findIndex(faqs, { id: faqId });
     if (faqs[indexItem + 1] && faqs[indexItem]) {
       let newFaq = arrayMove(faqs, indexItem, indexItem + 1);
@@ -297,20 +304,33 @@ function Faqs() {
   return (
     <LayoutDefault title="FAQs" shop={shop}>
       <Page
-        title="FAQ Editor"
+        title="FAQs"
         primaryAction={{
-          content: "Add New FAQ Group",
+          content: "Add FAQ Group",
           onAction: handleAddGroup,
         }}
       >
         <Layout>
           <Layout.Section>
             <div className="layout-group">
-              {formik?.values?.groups?.length > 0 && formik.values.groups.map((item) => (
-                <React.Fragment key={item?.id}>
-                  {renderGroup(item)}
-                </React.Fragment>
-              ))}
+              {formik?.values?.groups?.length > 0 ? (
+                formik.values.groups.map((item) => (
+                  <React.Fragment key={item?.id}>
+                    {renderGroup(item)}
+                  </React.Fragment>
+                ))
+              ) : (
+                <Card>
+                  <div className="faq-empty">
+                    <FormLayout>
+                      <TextStyle variation="strong">
+                        You have no FAQs yet...
+                      </TextStyle>
+                      <Button onClick={handleAddGroup} primary>Add Faq Group</Button>
+                    </FormLayout>
+                  </div>
+                </Card>
+              )}
             </div>
           </Layout.Section>
         </Layout>

@@ -144,19 +144,19 @@ function FaqItem({
     setEditorState(renderContent(newValue));
   }, [item?.question]);
 
-  const handleChangeSwitch = useCallback(async () => {
-    const data = await editFaq({
-      answer: EscapeJsonString(contentAnswer),
-      question,
-      faqId: item?.id,
-      groupId,
-      checked: !item?.checked,
-      group: formik?.values?.groups,
-    });
-    if (data) {
-      setIsEdit(false);
-    }
-  }, [item, contentAnswer, groupId, question]);
+  // const handleChangeSwitch = useCallback(async () => {
+  //   const data = await editFaq({
+  //     answer: EscapeJsonString(contentAnswer),
+  //     question,
+  //     faqId: item?.id,
+  //     groupId,
+  //     checked: !item?.checked,
+  //     group: formik?.values?.groups,
+  //   });
+  //   if (data) {
+  //     setIsEdit(false);
+  //   }
+  // }, [item, contentAnswer, groupId, question]);
 
   const handleDeleteFaq = useCallback(() => {
     deleteFaq({ faqId: item?.id, groupId });
@@ -207,7 +207,7 @@ function FaqItem({
                   {item?.question}
                 </div>
                 <div className="group-header-action">
-                  <Switch
+                  {/* <Switch
                     uncheckedIcon={false}
                     onColor="#008060"
                     checkedIcon={false}
@@ -215,7 +215,7 @@ function FaqItem({
                     onChange={handleChangeSwitch}
                     height={20}
                     width={40}
-                  />
+                  /> */}
                   <div
                     className="cursor-pointer icon-down"
                     onClick={() => handleUpRow({ groupId, faqId: item?.id })}

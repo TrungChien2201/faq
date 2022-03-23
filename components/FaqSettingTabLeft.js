@@ -42,17 +42,156 @@ export default function FaqSettingTabLeft({
 
   return (
     <>
+      <Card>
+        <Card.Section>
+          <TextField
+            id="title"
+            name="title"
+            label="Title"
+            error={!formik.values.title ? errorNameWidget : ""}
+            value={formik.values.title}
+            onChange={handleChange}
+          />
+        </Card.Section>
+      </Card>
+      <Card title="FAQ Page">
+        <Card.Section>
+          <FormLayout>
+            <CustomColorPicker
+              title="Header background color"
+              nameKey="headerBackgroundColor"
+              handleChangeSetColor={handleChangeSetColor}
+              backgroundColorBackUp={formik.values.headerBackgroundColor}
+              // description="Set image box-shadow color."
+              handleOpenSetColor={handleOpenSetColor}
+              colorPagination={colorPagination}
+              backgroundColor={dataBackUp.headerBackgroundColor}
+            />
+            <TextField
+              id="headerHeight"
+              name="headerHeight"
+              label="Header height"
+              value={formik.values.headerHeight}
+              type="number"
+              onChange={handleChange}
+            />
+            <Checkbox
+              id="showPageTitle"
+              name="showPageTitle"
+              checked={formik.values.showPageTitle}
+              label="Show page title"
+              onChange={handleChange}
+            />
+            {formik?.values?.showPageTitle && (
+              <TextField
+                id="pageTitle"
+                name="pageTitle"
+                label="Page title"
+                value={formik.values.pageTitle}
+                onChange={handleChange}
+              />
+            )}
+            <TextField
+              id="pageTitleSize"
+              name="pageTitleSize"
+              label="Page title size"
+              type="number"
+              value={formik.values.pageTitleSize}
+              onChange={handleChange}
+            />
+            <CustomColorPicker
+              title="Page title color"
+              nameKey="pageTitleColor"
+              handleChangeSetColor={handleChangeSetColor}
+              backgroundColorBackUp={formik.values.pageTitleColor}
+              // description="Set image box-shadow color."
+              handleOpenSetColor={handleOpenSetColor}
+              colorPagination={colorPagination}
+              backgroundColor={dataBackUp.pageTitleColor}
+            />
+            <Checkbox
+              id="showPageIntro"
+              name="showPageIntro"
+              checked={formik.values.showPageIntro}
+              label="Show page intro"
+              onChange={handleChange}
+            />
+            {formik?.values?.showPageIntro && (
+              <TextField
+                id="pageIntro"
+                name="pageIntro"
+                label="Page intro"
+                value={formik.values.pageIntro}
+                onChange={handleChange}
+              />
+            )}
+            <TextField
+              id="pageIntroSize"
+              name="pageIntroSize"
+              label="Page intro size"
+              type="number"
+              value={formik.values.pageIntroSize}
+              onChange={handleChange}
+            />
+            <CustomColorPicker
+              title="Page intro color"
+              nameKey="pageIntroColor"
+              handleChangeSetColor={handleChangeSetColor}
+              backgroundColorBackUp={formik.values.pageIntroColor}
+              // description="Set image box-shadow color."
+              handleOpenSetColor={handleOpenSetColor}
+              colorPagination={colorPagination}
+              backgroundColor={dataBackUp.pageIntroColor}
+            />
+            <Checkbox
+              id="showSearchBox"
+              name="showSearchBox"
+              checked={formik.values.showSearchBox}
+              label="Show search box"
+              onChange={handleChange}
+            />
+            {formik?.values?.showSearchBox && (
+              <TextField
+                id="searchPlaceholder"
+                name="searchPlaceholder"
+                label="Search placeholder"
+                value={formik.values.searchPlaceholder}
+                onChange={handleChange}
+              />
+            )}
+            {formik?.values?.showSearchBox && (
+              <TextField
+                id="searchNotFoundText"
+                name="searchNotFoundText"
+                label="Search not found text"
+                value={formik.values.searchNotFoundText}
+                onChange={handleChange}
+              />
+            )}
+            <TextField
+              id="groupNameSize"
+              name="groupNameSize"
+              label="Group name size"
+              type="number"
+              value={formik.values.groupNameSize}
+              onChange={handleChange}
+            />
+            <CustomColorPicker
+              title="Group name color"
+              nameKey="groupNameColor"
+              handleChangeSetColor={handleChangeSetColor}
+              backgroundColorBackUp={formik.values.groupNameColor}
+              // description="Set image box-shadow color."
+              handleOpenSetColor={handleOpenSetColor}
+              colorPagination={colorPagination}
+              backgroundColor={dataBackUp.groupNameColor}
+            />
+          </FormLayout>
+        </Card.Section>
+      </Card>
       <Card title="FAQ Select">
         <Card.Section>
           <FormLayout>
-            <TextField
-              id="faqName"
-              name="faqName"
-              label="Name"
-              error={!formik.values.faqName ? errorNameWidget : ""}
-              value={formik.values.faqName}
-              onChange={handleChange}
-            />
             <CustomField label="FAQ Groups">
               <div ref={refSelectMultile} onClick={handleOpenSelectMultile}>
                 <SelectMutileValueSortElement
@@ -190,154 +329,6 @@ export default function FaqSettingTabLeft({
               handleOpenSetColor={handleOpenSetColor}
               colorPagination={colorPagination}
               backgroundColor={dataBackUp.faqIconOpenColor}
-            />
-          </FormLayout>
-        </Card.Section>
-      </Card>
-      <Card title="Faq Setting">
-        <Card.Section>
-          <FormLayout>
-            <CustomColorPicker
-              title="Header background color"
-              nameKey="headerBackgroundColor"
-              handleChangeSetColor={handleChangeSetColor}
-              backgroundColorBackUp={formik.values.headerBackgroundColor}
-              // description="Set image box-shadow color."
-              handleOpenSetColor={handleOpenSetColor}
-              colorPagination={colorPagination}
-              backgroundColor={dataBackUp.headerBackgroundColor}
-            />
-            <TextField
-              id="headerHeight"
-              name="headerHeight"
-              label="Header height"
-              value={formik.values.headerHeight}
-              type="number"
-              onChange={handleChange}
-            />
-            <Checkbox
-              id="showPageTitle"
-              name="showPageTitle"
-              checked={formik.values.showPageTitle}
-              label="Show page title"
-              onChange={handleChange}
-            />
-            {formik?.values?.showPageTitle && (
-              <TextField
-                id="pageTitle"
-                name="pageTitle"
-                label="Page title"
-                value={formik.values.pageTitle}
-                onChange={handleChange}
-              />
-            )}
-            <TextField
-              id="pageTitleSize"
-              name="pageTitleSize"
-              label="Page title size"
-              type="number"
-              value={formik.values.pageTitleSize}
-              onChange={handleChange}
-            />
-            <CustomColorPicker
-              title="Page title color"
-              nameKey="pageTitleColor"
-              handleChangeSetColor={handleChangeSetColor}
-              backgroundColorBackUp={formik.values.pageTitleColor}
-              // description="Set image box-shadow color."
-              handleOpenSetColor={handleOpenSetColor}
-              colorPagination={colorPagination}
-              backgroundColor={dataBackUp.pageTitleColor}
-            />
-            <Checkbox
-              id="showPageIntro"
-              name="showPageIntro"
-              checked={formik.values.showPageIntro}
-              label="Show page intro"
-              onChange={handleChange}
-            />
-            {formik?.values?.showPageIntro && (
-              <TextField
-                id="pageIntro"
-                name="pageIntro"
-                label="Page intro"
-                value={formik.values.pageIntro}
-                onChange={handleChange}
-              />
-            )}
-            <TextField
-              id="pageIntroSize"
-              name="pageIntroSize"
-              label="Page intro size"
-              type="number"
-              value={formik.values.pageIntroSize}
-              onChange={handleChange}
-            />
-            <CustomColorPicker
-              title="Page intro color"
-              nameKey="pageIntroColor"
-              handleChangeSetColor={handleChangeSetColor}
-              backgroundColorBackUp={formik.values.pageIntroColor}
-              // description="Set image box-shadow color."
-              handleOpenSetColor={handleOpenSetColor}
-              colorPagination={colorPagination}
-              backgroundColor={dataBackUp.pageIntroColor}
-            />
-            <Checkbox
-              id="showSearchBox"
-              name="showSearchBox"
-              checked={formik.values.showSearchBox}
-              label="Show search box"
-              onChange={handleChange}
-            />
-            {formik?.values?.showSearchBox && (
-              <TextField
-                id="searchPlaceholder"
-                name="searchPlaceholder"
-                label="Search placeholder"
-                value={formik.values.searchPlaceholder}
-                onChange={handleChange}
-              />
-            )}
-            {formik?.values?.showSearchBox && (
-              <TextField
-                id="searchNotFoundText"
-                name="searchNotFoundText"
-                label="Search not found text"
-                value={formik.values.searchNotFoundText}
-                onChange={handleChange}
-              />
-            )}
-            <TextField
-              id="groupNameSize"
-              name="groupNameSize"
-              label="Group name size"
-              type="number"
-              value={formik.values.groupNameSize}
-              onChange={handleChange}
-            />
-            <CustomColorPicker
-              title="Group name color"
-              nameKey="groupNameColor"
-              handleChangeSetColor={handleChangeSetColor}
-              backgroundColorBackUp={formik.values.groupNameColor}
-              // description="Set image box-shadow color."
-              handleOpenSetColor={handleOpenSetColor}
-              colorPagination={colorPagination}
-              backgroundColor={dataBackUp.groupNameColor}
-            />
-          </FormLayout>
-        </Card.Section>
-      </Card>
-      <Card title="Advanced">
-        <Card.Section>
-          <FormLayout>
-            <TextField
-              id="faqCssClass"
-              name="faqCssClass"
-              label="Additional CSS class(es)"
-              value={formik.values.faqCssClass}
-              onChange={handleChange}
             />
           </FormLayout>
         </Card.Section>

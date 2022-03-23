@@ -20,14 +20,16 @@ import WidgetTabLeft from "./WidgetTabLeft";
 import FaqSettingTabLeft from "./FaqSettingTabLeft";
 
 const FaqSettingEdit = (props) => {
-  const { idEdit, setIdEdit, data, slider, accessToken } = props;
+  const { data, slider, accessToken } = props;
 
   const [activeSuccess, setActiveSuccess] = useState(0);
   const [activeError, setActiveError] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [faqGroup, setFaqGroup] = useState([]);
+  const [faqGroupIframe, setFaqGroupIframe] = useState([]);
   const [errorNameWidget, setErrorNameWidget] = useState("");
+  const [idEdit, setIdEdit] = useState("");
   const formik = useFormik({
     initialValues: {
       groups: "",
@@ -48,7 +50,7 @@ const FaqSettingEdit = (props) => {
       searchNotFoundText: "Oops, your search did not match any FAQs",
       groupNameSize: "24",
       groupNameColor: "#000",
-      faqName: "",
+      title: "",
       faqStyleID: ["style1"],
       faqBehavior: ["accordion"],
       faqNameTag: ["none"],
@@ -60,7 +62,6 @@ const FaqSettingEdit = (props) => {
       faqQuestionOpenColor: "#11a9d5",
       faqIconCloseColor: "#11a9d5",
       faqIconOpenColor: "#11a9d5",
-      faqCssClass: "",
     },
     onSubmit: (values) => {
       handleSubmit(values);
@@ -208,7 +209,7 @@ const FaqSettingEdit = (props) => {
   };
 
   const getFaqSettingDetail = async (id) => {
-    let data = { shop: data?.shop };
+    let datas = { shop: data?.shop };
 
     let config = {
       headers: {
@@ -216,7 +217,7 @@ const FaqSettingEdit = (props) => {
       },
     };
     try {
-      axios.post(`/api/faq-setting/${id}`, data, config).then(({ data }) => {
+      axios.post(`/api/faq-setting/${id}`, datas, config).then(({ data }) => {
         if (data?.success) {
           const newValue = Object.assign(
             formik.values,
@@ -239,6 +240,25 @@ const FaqSettingEdit = (props) => {
     }
   };
 
+  const getFaqSettingPage = async () => {
+    let datas = { shop: data?.shop };
+
+    let config = {
+      headers: {
+        "x-access-token": accessToken,
+      },
+    };
+    try {
+      axios.post(`/api/faq-setting`, datas, config).then(({ data }) => {
+        if (data?.success && data?.data?.faqSetting[0]?._id) {
+          setIdEdit(data?.data?.faqSetting[0]?._id);
+        }
+      });
+    } catch (error) {
+      toggleError();
+    }
+  };
+
   useEffect(() => {
     if (idEdit) {
       getFaqSettingDetail(idEdit);
@@ -246,11 +266,8 @@ const FaqSettingEdit = (props) => {
   }, [idEdit]);
 
   useEffect(() => {
-    if (router?.query?.id && typeof window !== "undefined") {
-      setIdEdit(router.query.id);
-      // getSlider(id);
-    }
-  }, [router]);
+    getFaqSettingPage()
+  }, []);
 
   const getListFaqGroup = useCallback(async () => {
     const datas = {
@@ -258,14 +275,17 @@ const FaqSettingEdit = (props) => {
     };
     const respone = await RequestCustom.post("/api/faq", datas);
     if (respone?.data?.data?.faq?.length > 0) {
-      const newFaqGroup = [
-        { label: "", value: "" },
-        ...respone?.data?.data?.faq?.map((item) => ({
-          label: item?.config?.name,
-          value: item?._id,
-        })),
-      ];
+      const newFaqGroup = respone?.data?.data?.faq?.map((item) => ({
+        label: item?.config?.name,
+        value: item?._id,
+      }));
+      const newFaqGroupIframe = respone?.data?.data?.faq?.map((item) => ({
+          id: item?._id,
+          name: item?.config?.name,
+          faqs: item?.config?.faqs,
+      }))
       setFaqGroup(newFaqGroup);
+      setFaqGroupIframe(newFaqGroupIframe);
     }
   }, [data?.shop]);
 
@@ -303,12 +323,12 @@ const FaqSettingEdit = (props) => {
   };
 
   const beforeSubmit = useCallback(() => {
-    if (formik.values.faqName) {
+    if (formik.values.title) {
       handleSubmit();
       setErrorNameWidget("");
       return;
     }
-    setErrorNameWidget("Name can't be blank.");
+    setErrorNameWidget("Title can't be blank.");
   }, [formik]);
 
   const userMenuMarkup = useCallback(
@@ -361,6 +381,7 @@ const FaqSettingEdit = (props) => {
                 shop={data?.shop}
                 accessToken={accessToken}
                 formik={formik}
+                faqGroup={faqGroupIframe}
               />
             </Layout.Section>
             {messageSuccess()}

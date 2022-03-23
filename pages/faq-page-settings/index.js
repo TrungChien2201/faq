@@ -1,21 +1,18 @@
 import axios from "axios";
 import cookies from "next-cookies";
-import { useCallback, useEffect, useState } from "react";
-import FaqListing from "../../components/FaqSettingListing";
-import LayoutDefault from "../../components/LayoutDefault";
+import Head from "next/head";
+import { useEffect, useState } from "react";
+import FaqSettingEdit from "../../components/FaqSettingEdit";
 
 function FaqPageSetting({ accessToken, shop }) {
   // const app = NODE_ENV === "development" ? null : null;
   const [plan, setPlan] = useState("");
-  const [editor, setEditor] = useState(false);
   const [slider, setSlider] = useState([]);
   const [idEdit, setIdEdit] = useState("");
   const [isAddNew, setIsAddNew] = useState(false);
+  const shops = shop || typeof window !== "undefined" && localStorage.getItem("shop");
   const accessTokens =
-    accessToken ||
-    (typeof window !== "undefined" && localStorage.getItem("accessToken"));
-  const shops =
-    shop || (typeof window !== "undefined" && localStorage.getItem("shop"));
+  accessToken || (typeof window !== "undefined" && localStorage.getItem("accessToken"));
   const getShopPlan = async () => {
     let config = {
       headers: {
@@ -33,23 +30,18 @@ function FaqPageSetting({ accessToken, shop }) {
     getShopPlan();
   }, []);
 
-  const toggleEditor = useCallback(() => {
-    setEditor(!editor);
-  }, [editor]);
-
   return (
-    <LayoutDefault title="Faq Settings" shop={shops}>
-      <FaqListing
-        data={{ shop: shops }}
+    <>
+      <Head>Faq Settings</Head>
+      <FaqSettingEdit
+        data={{ shop: shops, plan }}
         slider={slider}
-        accessToken={accessTokens}
         setSlider={setSlider}
-        setIdEdit={setIdEdit}
-        idEdit={idEdit}
-        handleAddNew={() => setIsAddNew(true)}
-        toggleSliderEdit={toggleEditor}
+        accessToken={accessTokens}
+        isAddNew={isAddNew}
+        handleClearAddNew={() => setIsAddNew(false)}
       />
-    </LayoutDefault>
+    </>
   );
 }
 

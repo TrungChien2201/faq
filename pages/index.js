@@ -1,8 +1,8 @@
 import React from "react";
-import Dashboard from "./dashboard";
+import Faqs from "./faqs";
 
 const Index = () => {
-  return <Dashboard />;
+  return <Faqs />;
 };
 
 export default Index;

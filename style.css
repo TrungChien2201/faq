@@ -528,7 +528,6 @@ select.select {
   transform: translate(-50%, 0px) !important;
 }
 
-
 /*faq*/
 .layout-group {
   display: flex;
@@ -536,7 +535,11 @@ select.select {
   row-gap: 40px;
 }
 .faq-group {
-  box-shadow: var(--p-card-shadow, 0 0 0 1px rgba(63, 63, 68, 0.05), 0 1px 3px 0 rgba(63, 63, 68, 0.15));
+  box-shadow: var(
+    --p-card-shadow,
+    0 0 0 1px rgba(63, 63, 68, 0.05),
+    0 1px 3px 0 rgba(63, 63, 68, 0.15)
+  );
 }
 
 .item-header {
@@ -559,8 +562,7 @@ select.select {
   justify-content: space-between;
   background-color: #ffffff;
   padding: 20px 30px;
-  border-left: 4px solid #0073aa;
-    border-bottom: 1px solid #ebebeb;
+  border-bottom: 1px solid #ebebeb;
 }
 
 .group-header-action {
@@ -638,4 +640,11 @@ select.select {
 
 .cursor-pointer {
   cursor: pointer;
+}
+
+.faq-empty {
+  max-width: 300px;
+  margin: auto;
+  padding: 40px 0;
+  text-align: center;
 }

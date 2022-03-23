@@ -40,14 +40,14 @@ function FaqGroup({
     idEditFaqGroup,
   ]);
 
-  const onChange = () => {
-    handleEditGroup({
-      id: group?.id,
-      name: groupName,
-      faq,
-      checked: !group.checked,
-    });
-  };
+  // const onChange = () => {
+  //   handleEditGroup({
+  //     id: group?.id,
+  //     name: groupName,
+  //     faq,
+  //     checked: !group.checked,
+  //   });
+  // };
 
   useEffect(() => {
     if (idEditAddNew === group?.id) {
@@ -128,7 +128,7 @@ function FaqGroup({
           <>
             <div>{group?.name}</div>
             <div className="group-header-action">
-              <Switch
+              {/* <Switch
                 uncheckedIcon={false}
                 onColor="#008060"
                 checkedIcon={false}
@@ -136,7 +136,7 @@ function FaqGroup({
                 onChange={onChange}
                 height={20}
                 width={40}
-              />
+              /> */}
               <div onClick={() => setIsEdit(true)} className="cursor-pointer">
                 <Icon source={EditMinor} />
               </div>
@@ -165,7 +165,7 @@ function FaqGroup({
           </div>
         )}
       </div>
-      {!isEdit && (
+      {
         <div className="group-content">
           <div className="group-list-faq">
             {group?.faqs?.map((item, index) => (
@@ -183,7 +183,7 @@ function FaqGroup({
             </Button>
           </div>
         </div>
-      )}
+      }
       {isConfirmDelete && <ModalConfirmDelete groupName={group?.name} setOpen={setIsConfirmDelete} handleDelete={handleDeleteGroup} />}
     </div>
   );

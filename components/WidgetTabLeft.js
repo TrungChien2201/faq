@@ -41,17 +41,21 @@ export default function WidgetTabLeft({
 
   return (
     <>
+      <Card>
+        <Card.Section>
+          <TextField
+            id="title"
+            name="title"
+            label="Title"
+            error={!formik.values.title ? errorNameWidget : ""}
+            value={formik.values.title}
+            onChange={handleChange}
+          />
+        </Card.Section>
+      </Card>
       <Card title="FAQ Select">
         <Card.Section>
           <FormLayout>
-            <TextField
-              id="faqName"
-              name="faqName"
-              label="Name"
-              error={!formik.values.faqName ? errorNameWidget : ""}
-              value={formik.values.faqName}
-              onChange={handleChange}
-            />
             <CustomField label="FAQ Groups">
               <div ref={refSelectMultile} onClick={handleOpenSelectMultile}>
                 <SelectMutileValueSortElement
@@ -63,7 +67,6 @@ export default function WidgetTabLeft({
                 />
               </div>
             </CustomField>
-
             <ChoiceList
               title="FAQ Style"
               id="faqStyleID"
@@ -189,19 +192,6 @@ export default function WidgetTabLeft({
               handleOpenSetColor={handleOpenSetColor}
               colorPagination={colorPagination}
               backgroundColor={dataBackUp.faqIconOpenColor}
-            />
-          </FormLayout>
-        </Card.Section>
-      </Card>
-      <Card title="Advanced">
-        <Card.Section>
-          <FormLayout>
-            <TextField
-              id="faqCssClass"
-              name="faqCssClass"
-              label="Additional CSS class(es)"
-              value={formik.values.faqCssClass}
-              onChange={handleChange}
             />
           </FormLayout>
         </Card.Section>
