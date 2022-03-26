@@ -26,7 +26,10 @@ export default function IframePreview({
     if (formik?.values?.groups?.length > 0) {
       renderGroupSelected(formik.values.groups, faqGroup);
     }
-  }, [formik.values.groups, faqGroup]);
+    if (formik?.values?.faqGroup?.length > 0 && isFaq) {
+      renderGroupSelected(formik.values.faqGroup, faqGroup);
+    }
+  }, [formik.values.groups, faqGroup, formik.values.faqGroup, isFaq]);
 
   useEffect(() => {
     if (faqGroups) {
