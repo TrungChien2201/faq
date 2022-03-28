@@ -58,6 +58,7 @@ export default function IframePreview({
   }, [faqGroups, formik.values]);
 
   const render = async (data) => {
+    console.log(data);
     const document = iframe.current.contentDocument;
     let head = document.getElementsByTagName("head")[0];
     head.innerHTML = "";
@@ -77,16 +78,23 @@ export default function IframePreview({
     let style3 = document.createElement("link");
     style3.rel = "stylesheet";
     style3.type = "text/css";
-    style3.href = `${HOST}/${
+    style3.href = `https://${HOST}/${
       isFaq ? "faq-preview.css" : "faq-page-preview.css"
     }`;
     head.appendChild(style3);
+
+    let style4 = document.createElement("link");
+    style4.rel = "stylesheet";
+    style4.type = "text/css";
+    style4.href = `https://${HOST}/iframe.css`;
+    head.appendChild(style4);
+
     let html = await engine.parseAndRender(
       isFaq ? templateFaq : templateFaqSetting,
       data
     );
     document.body.innerHTML = `
-      <body>${html}</body>
+      <body><div class="${isFaq ? "faq-preview" : "faq-page-preview"}">${html}</div></body>
     `;
     let jquery = document.createElement("script");
     jquery.src =
@@ -102,7 +110,7 @@ export default function IframePreview({
       "https://cdnjs.cloudflare.com/ajax/libs/masonry/4.2.2/masonry.pkgd.min.js";
     document.body.appendChild(masonry);
     let script = document.createElement("script");
-    script.src = `${HOST}/${isFaq ? "faq-preview.js" : "faq-page-preview.js"}`;
+    script.src = `https://${HOST}/${isFaq ? "faq-preview.js" : "faq-page-preview.js"}`;
     document.body.appendChild(script);
   };
 

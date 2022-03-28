@@ -1,0 +1,23 @@
+body {
+  margin: 0;
+  background: white;
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif;
+}
+
+.faq-preview {
+  background: #fff;
+  padding: 60px 5%;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.faq-page-preview {
+  background: #fff;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.faq-preview p {
+  margin: 0 0 26px;
+}

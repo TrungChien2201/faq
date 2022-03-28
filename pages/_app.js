@@ -10,6 +10,7 @@ import "@shopify/polaris/dist/styles.css";
 import translations from "@shopify/polaris/locales/en.json";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import "../style.css";
+import "../assets/style.scss";
 import axios from "axios";
 import cookies from "next-cookies";
 import Link from "next/link";

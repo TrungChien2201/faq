@@ -334,9 +334,12 @@ const FaqSettingEdit = (props) => {
   const userMenuMarkup = useCallback(
     () => (
       <ButtonGroup>
-        <Button onClick={handleBack}>Cancel</Button>
-        <Button primary loading={isLoading} onClick={beforeSubmit}>
-          {idEdit ? "Save" : "Publish"}
+        <Button plain onClick={handleBack}>Cancel</Button>
+        <Button loading={isLoading} onClick={beforeSubmit}>
+          Save
+        </Button>
+        <Button primary>
+          View Page
         </Button>
       </ButtonGroup>
     ),
@@ -358,9 +361,8 @@ const FaqSettingEdit = (props) => {
                 />
               </div>
             </Layout.Section>
-            <Layout.Section oneThird>
-              <FormLayout>
-                <div>
+            <div class="editor-wrapper">
+            <div class="editor-sidebar">
                   <div className={"widget-edit"}>
                     <FaqSettingTabLeft
                       errorNameWidget={errorNameWidget}
@@ -374,16 +376,15 @@ const FaqSettingEdit = (props) => {
                     />
                   </div>
                 </div>
-              </FormLayout>
-            </Layout.Section>
-            <Layout.Section id="preview-iframe">
+              <div class="editor-preview">
               <IframePreview
                 shop={data?.shop}
                 accessToken={accessToken}
                 formik={formik}
                 faqGroup={faqGroupIframe}
               />
-            </Layout.Section>
+              </div>
+              </div>
             {messageSuccess()}
             {errorMarkup()}
             {/* {isSubmit && <ModalPublishWidget setOpen={setIsSubmit} />} */}

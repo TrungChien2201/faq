@@ -42,18 +42,6 @@ export default function FaqSettingTabLeft({
 
   return (
     <>
-      <Card>
-        <Card.Section>
-          <TextField
-            id="title"
-            name="title"
-            label="Title"
-            error={!formik.values.title ? errorNameWidget : ""}
-            value={formik.values.title}
-            onChange={handleChange}
-          />
-        </Card.Section>
-      </Card>
       <Card title="FAQ Page">
         <Card.Section>
           <FormLayout>

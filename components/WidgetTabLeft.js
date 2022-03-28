@@ -41,12 +41,11 @@ export default function WidgetTabLeft({
 
   return (
     <>
-      <Card>
+      <Card title="Widget Title">
         <Card.Section>
           <TextField
             id="title"
             name="title"
-            label="Title"
             error={!formik.values.title ? errorNameWidget : ""}
             value={formik.values.title}
             onChange={handleChange}

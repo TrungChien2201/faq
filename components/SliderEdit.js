@@ -283,10 +283,15 @@ const SliderEdit = (props) => {
   const userMenuMarkup = useCallback(
     () => (
       <ButtonGroup>
-        <Button onClick={handleBack}>Cancel</Button>
-        <Button primary loading={isLoading} onClick={beforeSubmit}>
-          {idEdit ? "Save" : "Publish"}
+        <Button plain={true} onClick={handleBack}>Cancel</Button>
+        <Button loading={isLoading} onClick={beforeSubmit}>
+          Save
         </Button>
+        {idEdit &&
+          <Button primary>
+            Publish
+          </Button>
+        }
       </ButtonGroup>
     ),
     [handleBack, isLoading, idEdit]
@@ -307,9 +312,8 @@ const SliderEdit = (props) => {
                 />
               </div>
             </Layout.Section>
-            <Layout.Section oneThird>
-              <FormLayout>
-                <div>
+            <div class="editor-wrapper">
+            <div class="editor-sidebar">
                   <div className={"widget-edit"}>
                     <WidgetTabLeft
                       errorNameWidget={errorNameWidget}
@@ -322,10 +326,8 @@ const SliderEdit = (props) => {
                       colorPagination={colorPagination}
                     />
                   </div>
-                </div>
-              </FormLayout>
-            </Layout.Section>
-            <Layout.Section id="preview-iframe">
+            </div>
+            <div class="editor-preview">
               <IframePreview
                 shop={data?.shop}
                 accessToken={accessToken}
@@ -333,11 +335,12 @@ const SliderEdit = (props) => {
                 isFaq={true}
                 faqGroup={faqGroupIframe}
               />
-            </Layout.Section>
+            </div>
+          </div>
+            </Layout>
             {messageSuccess()}
             {errorMarkup()}
             {/* {isSubmit && <ModalPublishWidget setOpen={setIsSubmit} />} */}
-          </Layout>
         </Page>
       </form>
     </Frame>

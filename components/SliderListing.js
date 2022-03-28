@@ -10,8 +10,9 @@ import {
   IndexTable,
   useIndexResourceState,
   Icon,
-  TextStyle,
+  DisplayText,
   FormLayout,
+  TextStyle,
 } from "@shopify/polaris";
 import axios from "axios";
 import { DeleteMinor, EditMinor } from "@shopify/polaris-icons";
@@ -24,7 +25,7 @@ import RequestCustom from "../constants/request";
 
 const heading = [
   { title: "Title" },
-  // { title: "Shortcode" },
+  { title: "Code" },
   { title: "Date" },
   { title: "" },
 ];
@@ -194,7 +195,7 @@ const SliderListing = (props) => {
         selected={selectedResources.includes(_id)}
       >
         <IndexTable.Cell>{title}</IndexTable.Cell>
-
+        <IndexTable.Cell>Code</IndexTable.Cell>
         <IndexTable.Cell>
           {moment(createdAt).format("DD/MM/YYYY")}
         </IndexTable.Cell>
@@ -242,9 +243,11 @@ const SliderListing = (props) => {
                 <Card>
                   <div className="faq-empty">
                     <FormLayout>
-                      <TextStyle variation="strong">
-                        Create widget to display FAQs anywhere
-                      </TextStyle>
+                      <DisplayText size="small">
+                        <TextStyle variation="strong">
+                          Create widget to display FAQs anywhere
+                        </TextStyle>
+                      </DisplayText>
                       <Button onClick={openSliderEdit} primary>
                         Add Widget
                       </Button>

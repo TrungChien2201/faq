@@ -5,6 +5,7 @@ import {
   Layout,
   Page,
   TextStyle,
+  DisplayText
 } from "@shopify/polaris";
 import arrayMove from "array-move";
 import { useFormik } from "formik";
@@ -323,10 +324,12 @@ function Faqs() {
                 <Card>
                   <div className="faq-empty">
                     <FormLayout>
+                    <DisplayText size="small">
                       <TextStyle variation="strong">
                         You have no FAQs yet...
                       </TextStyle>
-                      <Button onClick={handleAddGroup} primary>Add Faq Group</Button>
+                      </DisplayText>
+                      <Button onClick={handleAddGroup} primary>Add FAQ Group</Button>
                     </FormLayout>
                   </div>
                 </Card>

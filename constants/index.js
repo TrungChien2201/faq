@@ -63,17 +63,17 @@ export const BASE_URL = "https://api.cloudinary.com/v1_1/de6j4d42n/upload";
 
 export const optionIconStyle = [
   { label: <Icon source={FaAngleRight} color="base" />, value: "1" },
-  { label: <Icon source={FaChevronRight} color="base" />, value: "chevron" },
+  { label: <Icon source={FaChevronRight} color="base" />, value: "2" },
   {
     label: <Icon source={FaAngleDoubleRight} color="base" />,
-    value: "angle-double",
+    value: "3",
   },
-  { label: <Icon source={FaArrowRight} color="base" />, value: "arrow" },
+  { label: <Icon source={FaArrowRight} color="base" />, value: "4" },
   {
     label: <Icon source={FaLongArrowAltRight} color="base" />,
-    value: "long-arrow",
+    value: "5",
   },
-  { label: <Icon source={FaCaretRight} color="base" />, value: "caret" },
+  { label: <Icon source={FaCaretRight} color="base" />, value: "6" },
 ];
 
 export const optionFonStyle = [
