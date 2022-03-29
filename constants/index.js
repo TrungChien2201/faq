@@ -7,7 +7,23 @@ import {
   FaChevronRight,
   FaLongArrowAltRight,
 } from "react-icons/fa";
+import Image from "next/image";
+import IconPlush3 from "../assets/icon/icon-plush3.svg";
+import IconPlusFull from "../assets/icon/icon-plus-full.svg";
+import IconPlus4 from "../assets/icon/icon-plush4.svg";
+import IconPlus5 from "../assets/icon/icon-plush5.svg";
+import IconPlus6 from "../assets/icon/icon-plush6.svg";
+import IconPlus7 from "../assets/icon/icon-plush7.svg";
+import IconPlus from "../assets/icon/icon-plus.svg";
 
+import IconArrowDown from "../assets/icon/icon-arrow-down.svg";
+import IconArrowDown2 from "../assets/icon/icon-arrow-down2.svg";
+import IconArrowDown3 from "../assets/icon/icon-arrow-down3.svg";
+import IconArrowDown4 from "../assets/icon/icon-arrow-down4.svg";
+import IconArrowDown5 from "../assets/icon/icon-arrow-down5.svg";
+import IconArrowDown6 from "../assets/icon/icon-arrow-down6.svg";
+import IconArrowDown7 from "../assets/icon/icon-arrow-down7.svg";
+import IconArrowDown8 from "../assets/icon/icon-arrow-down8.svg";
 export const GRID = "grid";
 export const FILTER = "filter";
 export const SAME_PAGE = "same_page";
@@ -62,18 +78,81 @@ export const UPLOAD_PRESET = "vzdq3qdu";
 export const BASE_URL = "https://api.cloudinary.com/v1_1/de6j4d42n/upload";
 
 export const optionIconStyle = [
-  { label: <Icon source={FaAngleRight} color="base" />, value: "1" },
-  { label: <Icon source={FaChevronRight} color="base" />, value: "2" },
   {
-    label: <Icon source={FaAngleDoubleRight} color="base" />,
+    label: <img className="icon-select" src={IconPlus} />,
+    value: "1",
+    id: "icon-1",
+  },
+  {
+    label: <img className="icon-select" src={IconPlusFull} />,
+    value: "2",
+    id: "icon-2",
+  },
+  {
+    label: <img className="icon-select" src={IconPlush3} />,
     value: "3",
+    id: "icon-3",
   },
-  { label: <Icon source={FaArrowRight} color="base" />, value: "4" },
   {
-    label: <Icon source={FaLongArrowAltRight} color="base" />,
-    value: "5",
+    label: <img className="icon-select" src={IconPlus4} />,
+    value: "4",
+    id: "icon-4",
   },
-  { label: <Icon source={FaCaretRight} color="base" />, value: "6" },
+  {
+    label: <img className="icon-select" src={IconArrowDown} />,
+    value: "5",
+    id: "icon-5",
+  },
+  {
+    label: <img className="icon-select" src={IconArrowDown7} />,
+    value: "6",
+    id: "icon-6",
+  },
+  {
+    label: <img className="icon-select" src={IconArrowDown8} />,
+    value: "7",
+    id: "icon-7",
+  },
+  {
+    label: <img className="icon-select" src={IconArrowDown2} />,
+    value: "8",
+    id: "icon-8",
+  },
+  {
+    label: <img className="icon-select" src={IconArrowDown3} />,
+    value: "9",
+    id: "icon-9",
+  },
+  {
+    label: <img className="icon-select" src={IconArrowDown4} />,
+    value: "10",
+    id: "icon-10",
+  },
+  {
+    label: <img className="icon-select" src={IconArrowDown5} />,
+    value: "11",
+    id: "icon-11",
+  },
+  {
+    label: <img className="icon-select" src={IconArrowDown6} />,
+    value: "12",
+    id: "icon-12",
+  },
+  {
+    label: <img className="icon-select" src={IconPlus5} />,
+    value: "13",
+    id: "icon-13",
+  },
+  {
+    label: <img className="icon-select" src={IconPlus6} />,
+    value: "14",
+    id: "icon-14",
+  },
+  {
+    label: <img className="icon-select" src={IconPlus7} />,
+    value: "15",
+    id: "icon-15",
+  },
 ];
 
 export const optionFonStyle = [
@@ -101,7 +180,4 @@ export const optionFAQIconPosition = [
   { label: "Right", value: "right" },
 ];
 
-export const optionFAQExtra = [
-  { label: "None", value: "none" },
-];
-
+export const optionFAQExtra = [{ label: "None", value: "none" }];

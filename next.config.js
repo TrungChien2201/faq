@@ -8,7 +8,7 @@ const telemetryDisabled = JSON.stringify(process.env.NEXT_TELEMETRY_DISABLED);
 const withImages = require("next-images");
 
 module.exports = withImages({
-  fileExtensions: ["jpg", "jpeg", "png", "gif"],
+  fileExtensions: ["jpg", "jpeg", "png", "gif", "svg"],
   webpack: (config) => {
     const env = {
       API_KEY: apiKey,
@@ -29,6 +29,16 @@ module.exports = withImages({
       test: /\.liquid$/i,
       use: "raw-loader",
     });
+
+    config.module.rules.push({
+      test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
+      use: {
+          loader: 'url-loader',
+          options: {
+              limit: 100000
+          }
+      }
+  });
 
     return config;
   },

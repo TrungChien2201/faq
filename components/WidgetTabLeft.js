@@ -112,6 +112,7 @@ export default function WidgetTabLeft({
               selected={formik.values.faqExtras}
               onChange={handleChange}
             />
+           
             <CustomField label="Icon Size">
               <div
                 style={{

@@ -615,3 +615,17 @@ select.select {
   padding: 40px 0;
   text-align: center;
 }
+
+.icon-select {
+  width: 18px;
+  height: 18px;
+}
+
+#faqIconSelect .Polaris-Choice__Label {
+  width: 18px;
+  height: 18px;
+}
+
+#faqIconSelect .Polaris-Choice {
+  align-items: center;
+}

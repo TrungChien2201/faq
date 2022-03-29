@@ -49,10 +49,10 @@ function FaqItem({
   const [question, setQuestion] = useState("");
   const [isConfirmDelete, setIsConfirmDelete] = useState(false);
 
-  useEffect(() => {
-    CKEditor = require("@ckeditor/ckeditor5-react").CKEditor;
-    ClassicEditor = require("@ckeditor/ckeditor5-build-classic");
-  }, []);
+  // useEffect(() => {
+  //   CKEditor = require("@ckeditor/ckeditor5-react").CKEditor;
+  //   ClassicEditor = require("@ckeditor/ckeditor5-build-classic");
+  // }, []);
 
   const handleChangeContent = (e) => {
     setContentAnswer(draftToHtml(e));
@@ -196,7 +196,7 @@ function FaqItem({
                 editorClassName="editor-faq"
                 onEditorStateChange={onEditorStateChange}
               />
-              <CKEditor
+              {/* <CKEditor
                 editor={ ClassicEditor }
                 data="<p>Hello from CKEditor 5!</p>"
                 onReady={ editor => {
@@ -213,7 +213,7 @@ function FaqItem({
                 onFocus={ ( event, editor ) => {
                     console.log( 'Focus.', editor );
                 } }
-              />
+              /> */}
               <ButtonGroup>
                 <Button onClick={handleSaveFaq} primary>
                   Save
@@ -283,6 +283,7 @@ function FaqItem({
       </Card>
       {isConfirmDelete && (
         <ModalConfirmDelete
+          title="Confirm Delete"
           setOpen={setIsConfirmDelete}
           handleDelete={handleDeleteFaq}
         />

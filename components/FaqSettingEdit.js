@@ -37,7 +37,7 @@ const FaqSettingEdit = (props) => {
       headerHeight: "300",
       showPageTitle: true,
       pageTitle: "Frequently Asked Questions",
-      pageTitleSize: "50",
+      pageTitleSize: "40",
 
       pageTitleColor: "rgba(255,255,255,1)",
       showPageIntro: true,
@@ -50,10 +50,9 @@ const FaqSettingEdit = (props) => {
       searchNotFoundText: "Oops, your search did not match any FAQs",
       groupNameSize: "24",
       groupNameColor: "#000",
-      title: "",
       faqStyleID: ["style1"],
       faqBehavior: ["accordion"],
-      faqNameTag: ["none"],
+      faqNameTag: ["h3"],
       faqIconPosition: ["right"],
       faqExtras: ["none"],
       faqIconSize: "20",
@@ -205,7 +204,7 @@ const FaqSettingEdit = (props) => {
   }, [activeSuccess]);
 
   const handleBack = () => {
-    router.push("/faq-page-settings");
+    router.push("/");
   };
 
   const getFaqSettingDetail = async (id) => {
@@ -323,13 +322,9 @@ const FaqSettingEdit = (props) => {
   };
 
   const beforeSubmit = useCallback(() => {
-    if (formik.values.title) {
       handleSubmit();
       setErrorNameWidget("");
-      return;
-    }
-    setErrorNameWidget("Title can't be blank.");
-  }, [formik]);
+  }, []);
 
   const userMenuMarkup = useCallback(
     () => (
@@ -346,7 +341,7 @@ const FaqSettingEdit = (props) => {
     [handleBack, isLoading, idEdit]
   );
 
-  const secondaryMenuMarkup = <Heading>{formik.values.title}</Heading>;
+  const secondaryMenuMarkup = null;
 
   return (
     <Frame>
@@ -361,8 +356,8 @@ const FaqSettingEdit = (props) => {
                 />
               </div>
             </Layout.Section>
-            <div class="editor-wrapper">
-            <div class="editor-sidebar">
+            <div className="editor-wrapper">
+            <div className="editor-sidebar">
                   <div className={"widget-edit"}>
                     <FaqSettingTabLeft
                       errorNameWidget={errorNameWidget}
@@ -376,7 +371,7 @@ const FaqSettingEdit = (props) => {
                     />
                   </div>
                 </div>
-              <div class="editor-preview">
+              <div className="editor-preview">
               <IframePreview
                 shop={data?.shop}
                 accessToken={accessToken}

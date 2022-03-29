@@ -17,6 +17,7 @@ import IframePreview from "./IframePreview";
 import router from "next/router";
 import RequestCustom from "../constants/request";
 import WidgetTabLeft from "./WidgetTabLeft";
+import ModalPublishWidget from "./ModalPublishWidget";
 
 const SliderEdit = (props) => {
   const { idEdit, setIdEdit, data, slider, accessToken } = props;
@@ -25,6 +26,7 @@ const SliderEdit = (props) => {
   const [activeError, setActiveError] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isOpenPublish,setIsOpenPublish] = useState(false);
   const [faqGroup, setFaqGroup] = useState([]);
   const [faqGroupIframe, setFaqGroupIframe] = useState([]);
   const [errorNameWidget, setErrorNameWidget] = useState("");
@@ -34,7 +36,7 @@ const SliderEdit = (props) => {
       faqGroup: "",
       faqStyleID: ["style1"],
       faqBehavior: ["accordion"],
-      faqNameTag: ["none"],
+      faqNameTag: ["h3"],
       faqIconPosition: ["right"],
       faqExtras: ["none"],
       faqIconSize: "20",
@@ -288,7 +290,7 @@ const SliderEdit = (props) => {
           Save
         </Button>
         {idEdit &&
-          <Button primary>
+          <Button onClick={() => setIsOpenPublish(true)} primary>
             Publish
           </Button>
         }
@@ -312,8 +314,8 @@ const SliderEdit = (props) => {
                 />
               </div>
             </Layout.Section>
-            <div class="editor-wrapper">
-            <div class="editor-sidebar">
+            <div className="editor-wrapper">
+            <div className="editor-sidebar">
                   <div className={"widget-edit"}>
                     <WidgetTabLeft
                       errorNameWidget={errorNameWidget}
@@ -327,7 +329,7 @@ const SliderEdit = (props) => {
                     />
                   </div>
             </div>
-            <div class="editor-preview">
+            <div className="editor-preview">
               <IframePreview
                 shop={data?.shop}
                 accessToken={accessToken}
@@ -340,7 +342,7 @@ const SliderEdit = (props) => {
             </Layout>
             {messageSuccess()}
             {errorMarkup()}
-            {/* {isSubmit && <ModalPublishWidget setOpen={setIsSubmit} />} */}
+            {isOpenPublish && <ModalPublishWidget setOpen={setIsOpenPublish} />}
         </Page>
       </form>
     </Frame>

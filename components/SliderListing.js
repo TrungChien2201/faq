@@ -262,7 +262,8 @@ const SliderListing = (props) => {
           {openDelete && (
             <ModalConfirmDelete
               setOpen={SetOpenDelete}
-              title="Remove view"
+              isDeleteWidget={true}
+              title="Confirm Delete"
               id={idSilerDelete}
               handleDelete={handleDeleteSlider}
             />

@@ -184,7 +184,7 @@ function FaqGroup({
           </div>
         </div>
       }
-      {isConfirmDelete && <ModalConfirmDelete groupName={group?.name} setOpen={setIsConfirmDelete} handleDelete={handleDeleteGroup} />}
+      {isConfirmDelete && <ModalConfirmDelete title="Confirm Delete" groupName={group?.name} setOpen={setIsConfirmDelete} handleDelete={handleDeleteGroup} />}
     </div>
   );
 }
