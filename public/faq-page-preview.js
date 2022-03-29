@@ -7,7 +7,6 @@
     $(document).on("click", '[data-simesyfaq-type="toggle"] .simesyfaq .simesyfaq__question', function () {
     $(this).parent(".simesyfaq").attr("data-simesyfaq-state") == "expanded"  ? $(this).parent(".simesyfaq").attr("data-simesyfaq-state", "closed") : $(this).parent(".simesyfaq").attr("data-simesyfaq-state", "expanded");
   });
-  var groupFAQ = data.groups;
   $(document).on('keyup','.faq-page__search-box input',function(e){
     var keyword = $(this).val();
     if(keyword == ''){

@@ -611,7 +611,6 @@ select.select {
 }
 
 .faq-empty {
-  max-width: 300px;
   margin: auto;
   padding: 40px 0;
   text-align: center;
