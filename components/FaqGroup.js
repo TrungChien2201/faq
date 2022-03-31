@@ -28,7 +28,7 @@ function FaqGroup({
   editFaq,
   deleteFaq,
   handleUpRow,
-  handleDownRow
+  handleDownRow,
 }) {
   const [isEdit, setIsEdit] = useState(false);
   const [groupName, setGroupName] = useState("");
@@ -54,8 +54,8 @@ function FaqGroup({
       setIsEdit(true);
     }
     return () => {
-      setIsEdit(false)
-    }
+      setIsEdit(false);
+    };
   }, [idEditAddNew]);
 
   useEffect(() => {
@@ -90,19 +90,13 @@ function FaqGroup({
     }
   }, [groupName, group, faq]);
 
-  const handleDeleteGroup = useCallback(
-    () => {
-      deleteGroup(group?.id, formik.values.groups);
-    },
-    [formik.values.groups, group?.id]
-  );
+  const handleDeleteGroup = useCallback(() => {
+    deleteGroup(group?.id, formik.values.groups);
+  }, [formik.values.groups, group?.id]);
 
-  const handleConfirmDelete = useCallback(
-    () => {
-      setIsConfirmDelete(true);
-    },
-    [isConfirmDelete]
-  );
+  const handleConfirmDelete = useCallback(() => {
+    setIsConfirmDelete(true);
+  }, [isConfirmDelete]);
 
   const renderFaq = useCallback(
     (item) => (
@@ -118,7 +112,16 @@ function FaqGroup({
         handleDownRow={handleDownRow}
       />
     ),
-    [formik, group?.id, editFaq, isGroupSelected, faqItem, deleteFaq, handleUpRow, handleDownRow]
+    [
+      formik,
+      group?.id,
+      editFaq,
+      isGroupSelected,
+      faqItem,
+      deleteFaq,
+      handleUpRow,
+      handleDownRow,
+    ]
   );
 
   return (
@@ -140,10 +143,7 @@ function FaqGroup({
               <div onClick={() => setIsEdit(true)} className="cursor-pointer">
                 <Icon source={EditMinor} />
               </div>
-              <div
-                onClick={handleConfirmDelete}
-                className="cursor-pointer"
-              >
+              <div onClick={handleConfirmDelete} className="cursor-pointer">
                 <Icon source={MobileCancelMajor} />
               </div>
             </div>
@@ -169,7 +169,19 @@ function FaqGroup({
         <div className="group-content">
           <div className="group-list-faq">
             {group?.faqs?.map((item, index) => (
-              <React.Fragment key={item?.id}>{renderFaq(item)}</React.Fragment>
+              <React.Fragment key={item?.id}>
+                <FaqItem
+                  formik={formik}
+                  groupId={group?.id}
+                  editFaq={editFaq}
+                  isGroupSelected={isGroupSelected}
+                  faqItem={faqItem}
+                  item={item}
+                  deleteFaq={deleteFaq}
+                  handleUpRow={handleUpRow}
+                  handleDownRow={handleDownRow}
+                />
+              </React.Fragment>
             ))}
           </div>
 
@@ -184,7 +196,14 @@ function FaqGroup({
           </div>
         </div>
       }
-      {isConfirmDelete && <ModalConfirmDelete title="Confirm Delete" groupName={group?.name} setOpen={setIsConfirmDelete} handleDelete={handleDeleteGroup} />}
+      {isConfirmDelete && (
+        <ModalConfirmDelete
+          title="Confirm Delete"
+          groupName={group?.name}
+          setOpen={setIsConfirmDelete}
+          handleDelete={handleDeleteGroup}
+        />
+      )}
     </div>
   );
 }

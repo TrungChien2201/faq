@@ -13,6 +13,8 @@ import {
   DisplayText,
   FormLayout,
   TextStyle,
+  ResourceList,
+  ResourceItem,
 } from "@shopify/polaris";
 import axios from "axios";
 import { DeleteMinor, EditMinor } from "@shopify/polaris-icons";
@@ -224,37 +226,70 @@ const SliderListing = (props) => {
         <Layout>
           <Layout.Section>
             <Card>
-              {slider?.length > 0 ? (
-                <>
-                  <IndexTable
-                    resourceName={resourceName}
-                    headings={heading}
-                    itemCount={slider?.length}
-                    selectable={false}
-                    selectedItemsCount={
-                      allResourcesSelected ? "All" : selectedResources.length
-                    }
-                    onSelectionChange={handleSelectionChange}
-                  >
-                    {rowMarkup}
-                  </IndexTable>
-                </>
-              ) : (
-                <Card>
-                  <div className="faq-empty">
-                    <FormLayout>
-                      <DisplayText size="small">
-                        <TextStyle variation="strong">
-                          Create widget to display FAQs anywhere
-                        </TextStyle>
-                      </DisplayText>
-                      <Button onClick={openSliderEdit} primary>
-                        Add Widget
-                      </Button>
-                    </FormLayout>
-                  </div>
-                </Card>
-              )}
+              <ResourceList
+                emptyState={
+                  <Card>
+                    <div className="faq-empty">
+                      <FormLayout>
+                        <DisplayText size="small">
+                          <TextStyle variation="strong">
+                            Create widget to display FAQs anywhere
+                          </TextStyle>
+                        </DisplayText>
+                        <Button onClick={openSliderEdit} primary>
+                          Add Widget
+                        </Button>
+                      </FormLayout>
+                    </div>
+                  </Card>
+                }
+                resourceName={{ singular: "customer", plural: "customers" }}
+                items={slider}
+                renderItem={(item) => {
+                  const { _id, config } = item;
+
+                  return (
+                    <ResourceItem
+                      id={_id}
+                      accessibilityLabel={`View details for ${_id}`}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <h3
+                          style={{
+                            width: "70%",
+                            overflow: "hidden",
+                            wordBreak: "break-word",
+                          }}
+                        >
+                          <TextStyle variation="strong">
+                            {config?.title}
+                          </TextStyle>
+                        </h3>
+                        <ButtonGroup>
+                          <Button
+                            size="slim"
+                            onClick={() => handleOpenEdit(_id)}
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            size="slim"
+                            onClick={() => handleOpenDelete(_id)}
+                          >
+                            Delete
+                          </Button>
+                        </ButtonGroup>
+                      </div>
+                    </ResourceItem>
+                  );
+                }}
+              />
             </Card>
           </Layout.Section>
           {errorMarkup()}

@@ -14,22 +14,19 @@ import {
   ChevronDownMinor,
   ChevronUpMinor,
 } from "@shopify/polaris-icons";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { EditorState, convertFromHTML, ContentState } from "draft-js";
 import dynamic from "next/dynamic";
 import unescapeJs from "unescape-js";
 import draftToHtml from "draftjs-to-html";
 import ModalConfirmDelete from "./ModalConfirmDelete";
-
-const Editor = dynamic(
-  () => {
-    return import("react-draft-wysiwyg").then((mod) => mod.Editor);
-  },
-  { ssr: false }
-);
-
-let CKEditor;
-let ClassicEditor;
+import MyUploadAdapter from "./MyUploadImage";
+// const Editor = dynamic(
+//   () => {
+//     return import("react-draft-wysiwyg").then((mod) => mod.Editor);
+//   },
+//   { ssr: false }
+// );
 
 function FaqItem({
   item,
@@ -43,30 +40,41 @@ function FaqItem({
   handleDownRow,
 }) {
   const [open, setOpen] = useState(false);
+  const [isAddNewOpen, setIsAddNewOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const [contentAnswer, setContentAnswer] = useState("");
   const [question, setQuestion] = useState("");
   const [isConfirmDelete, setIsConfirmDelete] = useState(false);
-
-  // useEffect(() => {
-  //   CKEditor = require("@ckeditor/ckeditor5-react").CKEditor;
-  //   ClassicEditor = require("@ckeditor/ckeditor5-build-classic");
-  // }, []);
+  const editorRef = useRef();
+  const [editorLoaded, setEditorLoaded] = useState(false);
+  
+  const { CKEditor, ClassicEditor, Essentials } = editorRef.current || {};
+  const [editor, setEditor] = useState();
+ 
+  useEffect(() => {
+    editorRef.current = {
+      CKEditor: require("@ckeditor/ckeditor5-react").CKEditor, // v3+
+      ClassicEditor: require("@ckeditor/ckeditor5-build-classic"),
+    };
+    setEditorLoaded(true);
+  }, []);
 
   const handleChangeContent = (e) => {
-    setContentAnswer(draftToHtml(e));
+    console.log(e);
+    setContentAnswer(e);
     // formik.handleChange({ target: { id: "content", value: draftToHtml(e) } });
   };
   useEffect(() => {
-    if (isGroupSelected && faqItem === item?.id) {
+    if (isGroupSelected && faqItem === item?.id && !isEdit && !isAddNewOpen) {
       setIsEdit(true);
+      setIsAddNewOpen(true);
     }
-    return () => {
-      setIsEdit(false);
-    };
-  }, [isGroupSelected, faqItem, item?.id]);
-
+  }, [isGroupSelected, isEdit, faqItem, item?.id, isAddNewOpen]);
+  useEffect(() => {
+    setIsEdit(false);
+  }, []);
+  console.log(isAddNewOpen, "isAddNewOpen");
   useEffect(() => {
     setQuestion(item?.question);
   }, [item?.question]);
@@ -109,16 +117,14 @@ function FaqItem({
   };
 
   const handleSaveFaq = useCallback(async () => {
-    const data = await editFaq({
-      answer: EscapeJsonString(contentAnswer),
+    editFaq({
+      answer: contentAnswer,
       question,
-      faqId: item?.id,
+      faqId: isGroupSelected && faqItem === item?.id ? faqItem : item?.id,
       groupId,
       group: formik?.values?.groups,
     });
-    if (data) {
-      setIsEdit(false);
-    }
+    setIsEdit(false);
   }, [
     setIsEdit,
     contentAnswer,
@@ -130,9 +136,9 @@ function FaqItem({
 
   useEffect(() => {
     if (item?.answer) {
-      const unescapeValue = unescapeJs(item?.answer);
-      const newValue = UnEscapeString(unescapeValue);
-      setEditorState(renderContent(newValue));
+      // const unescapeValue = unescapeJs(item?.answer);
+      // const newValue = UnEscapeString(unescapeValue);
+      // setEditorState(renderContent(newValue));
       setContentAnswer(item?.answer);
     }
   }, [item?.answer]);
@@ -147,9 +153,6 @@ function FaqItem({
     setIsEdit(false);
     setQuestion(item?.question);
     setContentAnswer(item?.answer);
-    const unescapeValue = unescapeJs(item?.answer);
-    const newValue = UnEscapeString(unescapeValue);
-    setEditorState(renderContent(newValue));
   }, [item?.question]);
 
   // const handleChangeSwitch = useCallback(async () => {
@@ -174,6 +177,48 @@ function FaqItem({
     setIsConfirmDelete(!isConfirmDelete);
   }, [isConfirmDelete]);
 
+  const MyCustomUploadAdapterPlugin = (editor) => {
+	  editor.plugins.get( 'FileRepository' ).createUploadAdapter = (loader) => {
+	    return new MyUploadAdapter(loader)
+	  }
+	}
+
+  const renderCkEditor = useCallback(() => {
+    return (
+      typeof window !== "undefined" &&
+      editorLoaded &&
+      CKEditor &&
+      ClassicEditor && (
+        <CKEditor
+      
+          editor={ClassicEditor}
+          onReady={(editor) => {
+            console.log("Editor is ready to use!", editor);
+            editor.ui
+              .getEditableElement()
+              .parentElement.insertBefore(
+                editor.ui.view.toolbar.element,
+                editor.ui.getEditableElement()
+              );
+          }}
+          data={contentAnswer}
+          onChange={(event, editor) => {
+            const data = editor.getData();
+            console.log(data, event);
+            handleChangeContent(data);
+          }}
+          config={{extraPlugins:[MyCustomUploadAdapterPlugin]}}
+        />
+      )
+    );
+  }, [
+    ClassicEditor,
+    editorLoaded,
+    CKEditor,
+    contentAnswer,
+    handleChangeContent,
+  ]);
+
   return (
     <>
       <Card>
@@ -187,7 +232,7 @@ function FaqItem({
                 // id="name"
                 // error={isShowError ? formik.errors.name : ""}
               />
-              <Editor
+              {/* <Editor
                 placeholder="Enter Content"
                 editorState={editorState}
                 onChange={handleChangeContent}
@@ -195,25 +240,8 @@ function FaqItem({
                 wrapperClassName="wrapperClassName"
                 editorClassName="editor-faq"
                 onEditorStateChange={onEditorStateChange}
-              />
-              {/* <CKEditor
-                editor={ ClassicEditor }
-                data="<p>Hello from CKEditor 5!</p>"
-                onReady={ editor => {
-                    // You can store the "editor" and use when it is needed.
-                    console.log( 'Editor is ready to use!', editor );
-                } }
-                onChange={ ( event, editor ) => {
-                    const data = editor.getData();
-                    console.log( { event, editor, data } );
-                } }
-                onBlur={ ( event, editor ) => {
-                    console.log( 'Blur.', editor );
-                } }
-                onFocus={ ( event, editor ) => {
-                    console.log( 'Focus.', editor );
-                } }
               /> */}
+              {renderCkEditor()}
               <ButtonGroup>
                 <Button onClick={handleSaveFaq} primary>
                   Save

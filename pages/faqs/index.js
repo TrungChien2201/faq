@@ -126,7 +126,7 @@ function Faqs() {
               {
                 id: idRandom,
                 question: "New FAQ : Question",
-                answer: "New FAQ : Answer",
+                answer: "<p>New FAQ : Answer</p>",
                 checked: false,
               },
             ],
@@ -145,6 +145,7 @@ function Faqs() {
 
   const editFaq = useCallback(
     async ({ groupId, faqId, answer, question, checked = null }) => {
+      console.log(groupId, faqId, answer, question)
       const newGroup = formik?.values?.groups?.find(
         (item) => item?.id === groupId
       );
@@ -180,7 +181,7 @@ function Faqs() {
     },
     [formik]
   );
-
+console.log(formik.values.groups)
   const deleteFaq = useCallback(
     async ({ groupId, faqId }) => {
       const newGroup = formik?.values?.groups?.find(

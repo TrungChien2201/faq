@@ -94,7 +94,7 @@ export default function LayoutDefault({ children, shop, title }) {
   );
 
   const secondaryMenuMarkup = (
-    <Image src={Logo} alt="Picture of the author" width="150px" height="36px" />
+    <img src={Logo} alt="Picture of the author"  style={{width: '150px', height: '36px'}} />
   );
 
   return (
