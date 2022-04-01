@@ -1,1 +1,1 @@
-# faq-app
+# faq
